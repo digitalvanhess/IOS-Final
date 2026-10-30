@@ -17,6 +17,7 @@ class TodayScreen extends StatefulWidget {
   final void Function(Expense, bool) onFavoriteChanged;
   final ValueChanged<Expense> onExpenseTap;
   final VoidCallback onAddTap;
+  final VoidCallback onHistoryTap;
 
   const TodayScreen({
     super.key,
@@ -26,6 +27,7 @@ class TodayScreen extends StatefulWidget {
     required this.onFavoriteChanged,
     required this.onExpenseTap,
     required this.onAddTap,
+    required this.onHistoryTap,
   });
 
   @override
@@ -81,7 +83,9 @@ class _TodayScreenState extends State<TodayScreen> {
         slivers: [
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
-            sliver: SliverToBoxAdapter(child: _TopBar(date: now)),
+            sliver: SliverToBoxAdapter(
+              child: _TopBar(date: now, onHistoryTap: widget.onHistoryTap),
+            ),
           ),
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
@@ -148,8 +152,9 @@ class _TodayScreenState extends State<TodayScreen> {
 
 class _TopBar extends StatelessWidget {
   final DateTime date;
+  final VoidCallback onHistoryTap;
 
-  const _TopBar({required this.date});
+  const _TopBar({required this.date, required this.onHistoryTap});
 
   @override
   Widget build(BuildContext context) {
@@ -198,6 +203,11 @@ class _TopBar extends StatelessWidget {
               ),
             ],
           ),
+        ),
+        IconButton(
+          onPressed: onHistoryTap,
+          tooltip: 'Все траты',
+          icon: const Icon(Icons.receipt_long_outlined),
         ),
       ],
     );

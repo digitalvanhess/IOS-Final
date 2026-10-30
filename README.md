@@ -56,6 +56,21 @@ couple of taps, and the limit updates instantly.
 | State is kept after going back | tabs live in an `IndexedStack`; favorites and expenses live in `RootScreen` |
 | Bonus: data back from a screen | `AddExpenseScreen` pops with the new `Expense`, detail pops with `true` on delete |
 
+### Lab #8: Dynamic Lists, Grids & Touch Gestures
+
+Screen **«Все траты»** ([`history_screen.dart`](lib/screens/history_screen.dart)), opened by the receipt icon in the top bar of «Сегодня».
+
+| Requirement | Where |
+|---|---|
+| `ListView.separated` with thin dividers | `_buildList()`: `Divider(height: 1, thickness: 0.5)` between [`ExpenseListRow`](lib/widgets/expense_list_row.dart)s (avatar, title, category tag, star, price) |
+| 2-column `GridView.builder`, `childAspectRatio: 0.72` | `_buildGrid()` with [`ExpenseGridCard`](lib/widgets/expense_grid_card.dart): photo in `Expanded`, fixed text lines, so no overflow |
+| List / Grid toggle | AppBar `IconButton` («Сеткой» / «Списком») |
+| Pull-to-refresh | `RefreshIndicator` → `_refresh()`: `await Future.delayed(1500 ms)`, then `_items.insert(0, MockData.randomExpense())` in `setState` |
+| Swipe-to-delete | `Dismissible(key: ValueKey(expense.id), direction: endToStart)` with a red background and `Icons.delete` |
+| UNDO | floating `SnackBar` with «ОТМЕНИТЬ», `_items.insert(index, expense)` puts it back at its original index |
+| Empty state | «Catalog is Empty» with an icon and a **Reset Catalog** button that restores the seed data |
+| Tests | list/grid without overflow on 3 sizes, swipe + undo, refresh, empty state ([`test/app_test.dart`](test/app_test.dart)) |
+
 ## Project structure
 
 ```
@@ -72,6 +87,7 @@ lib/
 │   ├── today_screen.dart         # Tab 1: feed
 │   ├── overview_screen.dart      # Tab 2: stats by category
 │   ├── favorites_screen.dart     # Tab 3: starred expenses
+│   ├── history_screen.dart       # LW8: list/grid, refresh, swipe-to-delete
 │   ├── profile_screen.dart       # Tab 4: profile & settings
 │   ├── expense_detail_screen.dart
 │   └── add_expense_screen.dart
@@ -82,7 +98,10 @@ lib/
 └── widgets/                      # Reusable UI pieces
     ├── budget_ring.dart          # CustomPainter ring
     ├── category_chip.dart
+    ├── category_tag.dart         # Colored category pill
+    ├── expense_grid_card.dart    # Grid cell (LW8)
     ├── expense_image.dart        # Network image with fallback
+    ├── expense_list_row.dart     # List row with avatar (LW8)
     ├── expense_tile.dart
     ├── favorite_button.dart      # StatefulWidget + setState
     ├── keypad.dart

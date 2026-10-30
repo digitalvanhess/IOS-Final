@@ -8,6 +8,7 @@ import '../utils/format.dart';
 import 'add_expense_screen.dart';
 import 'expense_detail_screen.dart';
 import 'favorites_screen.dart';
+import 'history_screen.dart';
 import 'overview_screen.dart';
 import 'profile_screen.dart';
 import 'today_screen.dart';
@@ -76,6 +77,32 @@ class _RootScreenState extends State<RootScreen> {
     if (deleted == true && mounted) _deleteExpense(expense);
   }
 
+  /// "Все траты" (list / grid). Changes made there come back through the
+  /// callbacks, so the feed, overview and favorites update too.
+  void _openHistory() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => HistoryScreen(
+          expenses: _sortedExpenses,
+          dailyLimit: _budget.dailyLimit(DateTime.now()),
+          isFavorite: _isFavorite,
+          onFavoriteChanged: _setFavorite,
+          onAdded: (e) => setState(() => _expenses.add(e)),
+          onRemoved: (e) => setState(() {
+            _expenses.remove(e);
+            _favoriteIds.remove(e.id);
+          }),
+          onReset: (seed) => setState(
+            () => _expenses
+              ..clear()
+              ..addAll(seed),
+          ),
+        ),
+      ),
+    );
+  }
+
   /// The add screen pops with the new [Expense] (or null when closed).
   Future<void> _openAddExpense() async {
     final now = DateTime.now();
@@ -139,6 +166,7 @@ class _RootScreenState extends State<RootScreen> {
             onFavoriteChanged: _setFavorite,
             onExpenseTap: _openDetail,
             onAddTap: _openAddExpense,
+            onHistoryTap: _openHistory,
           ),
           OverviewScreen(expenses: expenses),
           FavoritesScreen(
