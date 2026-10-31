@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import '../models/budget.dart';
 import '../models/category.dart';
 import '../models/expense.dart';
@@ -41,7 +43,8 @@ class MockData {
         date: at(1, 9, 5),
         place: 'Coffee Boom',
         description: 'Капучино перед первой парой.',
-        imageUrl: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800',
+        imageUrl:
+            'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800',
         tags: ['Кофе', 'Утро', 'Kaspi'],
       ),
       Expense(
@@ -76,9 +79,39 @@ class MockData {
         date: at(3, 20, 15),
         place: 'Kinopark',
         description: 'Вечерний сеанс по студенческой скидке.',
-        imageUrl: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800',
+        imageUrl:
+            'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800',
         tags: ['Досуг', 'Друзья'],
       ),
     ];
+  }
+
+  static final _random = Random();
+  static int _generated = 0;
+
+  /// Templates for expenses "loaded" by pull-to-refresh.
+  static const _templates = [
+    ('Шаурма', 1500, ExpenseCategory.food, 'Шаурма №1'),
+    ('Латте', 1100, ExpenseCategory.cafe, 'Starbucks'),
+    ('Такси до универа', 1300, ExpenseCategory.transport, 'Yandex Go'),
+    ('Молоко и хлеб', 900, ExpenseCategory.groceries, 'Small'),
+    ('Боулинг', 3000, ExpenseCategory.leisure, 'Kazakhstan Bowling'),
+    ('Печать конспектов', 600, ExpenseCategory.other, 'Копицентр'),
+  ];
+
+  /// A new expense with a unique id, dated now, as if it came from the API.
+  static Expense randomExpense() {
+    final (title, amount, category, place) =
+        _templates[_random.nextInt(_templates.length)];
+    _generated++;
+    return Expense(
+      id: 'r${DateTime.now().microsecondsSinceEpoch}_$_generated',
+      title: title,
+      amount: amount,
+      category: category,
+      date: DateTime.now(),
+      place: place,
+      description: 'Загружено при обновлении списка.',
+    );
   }
 }

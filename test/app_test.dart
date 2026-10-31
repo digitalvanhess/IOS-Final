@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:stipa/main.dart';
 import 'package:stipa/screens/add_expense_screen.dart';
 import 'package:stipa/screens/expense_detail_screen.dart';
+import 'package:stipa/screens/history_screen.dart';
+import 'package:stipa/widgets/expense_list_row.dart';
 
 /// Phone sizes we check for layout overflows (logical pixels).
 const _sizes = {
@@ -100,6 +102,73 @@ void main() {
     await tester.tap(find.text('Избранное').last);
     await tester.pumpAndSettle();
 
+    expect(find.text('Обед в столовой'), findsOneWidget);
+  });
+
+  for (final entry in _sizes.entries) {
+    testWidgets('Все траты: list and grid render without overflow on '
+        '${entry.key}', (tester) async {
+      await _pumpApp(tester, entry.value);
+      await tester.tap(find.byTooltip('Все траты'));
+      await tester.pumpAndSettle();
+      expect(find.byType(HistoryScreen), findsOneWidget);
+      expect(find.byType(ListView), findsOneWidget);
+
+      await tester.tap(find.byTooltip('Сеткой'));
+      await tester.pumpAndSettle();
+      expect(find.byType(GridView), findsOneWidget);
+
+      expect(tester.takeException(), isNull);
+    });
+  }
+
+  testWidgets('swipe deletes an expense and UNDO restores it', (tester) async {
+    await _pumpApp(tester, _sizes['iPhone 15']!);
+    await tester.tap(find.byTooltip('Все траты'));
+    await tester.pumpAndSettle();
+
+    await tester.drag(find.text('Обед в столовой'), const Offset(-500, 0));
+    await tester.pumpAndSettle();
+    expect(find.text('Обед в столовой'), findsNothing);
+    expect(find.text('ОТМЕНИТЬ'), findsOneWidget);
+
+    await tester.tap(find.text('ОТМЕНИТЬ'));
+    await tester.pumpAndSettle();
+    expect(find.text('Обед в столовой'), findsOneWidget);
+  });
+
+  testWidgets('pull-to-refresh adds a new expense at the top', (tester) async {
+    await _pumpApp(tester, _sizes['iPhone 15']!);
+    await tester.tap(find.byTooltip('Все траты'));
+    await tester.pumpAndSettle();
+    final before = find.byType(ExpenseListRow).evaluate().length;
+
+    await tester.fling(find.byType(ListView), const Offset(0, 400), 1000);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(milliseconds: 1500));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ExpenseListRow).evaluate().length, before + 1);
+    expect(find.text('Сегодня').first, findsOneWidget);
+  });
+
+  testWidgets('empty catalog shows Reset Catalog', (tester) async {
+    await _pumpApp(tester, _sizes['iPad']!);
+    await tester.tap(find.byTooltip('Все траты'));
+    await tester.pumpAndSettle();
+
+    // Count rows, not Dismissibles: the SnackBar is a Dismissible too.
+    for (var i = 0; i < 10; i++) {
+      final rows = find.byType(ExpenseListRow);
+      if (rows.evaluate().isEmpty) break;
+      await tester.drag(rows.first, const Offset(-900, 0));
+      await tester.pumpAndSettle();
+    }
+    expect(find.text('Catalog is Empty'), findsOneWidget);
+
+    await tester.tap(find.text('Reset Catalog'));
+    await tester.pumpAndSettle();
     expect(find.text('Обед в столовой'), findsOneWidget);
   });
 }
