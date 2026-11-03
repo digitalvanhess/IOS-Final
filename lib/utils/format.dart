@@ -76,5 +76,16 @@ class Format {
     return 'дней';
   }
 
+  /// 1 -> "покупка", 3 -> "покупки", 5 -> "покупок"
+  static String purchasesWord(int n) {
+    final mod10 = n % 10;
+    final mod100 = n % 100;
+    if (mod10 == 1 && mod100 != 11) return 'покупка';
+    if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) {
+      return 'покупки';
+    }
+    return 'покупок';
+  }
+
   static DateTime _dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
 }
