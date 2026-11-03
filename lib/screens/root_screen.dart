@@ -6,6 +6,7 @@ import '../models/expense.dart';
 import '../theme/app_theme.dart';
 import '../utils/format.dart';
 import 'add_expense_screen.dart';
+import 'catalog_screen.dart';
 import 'expense_detail_screen.dart';
 import 'favorites_screen.dart';
 import 'history_screen.dart';
@@ -103,6 +104,15 @@ class _RootScreenState extends State<RootScreen> {
     );
   }
 
+  /// «Покупки» (LW9). The cart lives in the global CartProvider, so no
+  /// arguments or callbacks are needed here.
+  void _openCatalog() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const CatalogScreen()),
+    );
+  }
+
   /// The add screen pops with the new [Expense] (or null when closed).
   Future<void> _openAddExpense() async {
     final now = DateTime.now();
@@ -167,6 +177,7 @@ class _RootScreenState extends State<RootScreen> {
             onExpenseTap: _openDetail,
             onAddTap: _openAddExpense,
             onHistoryTap: _openHistory,
+            onCatalogTap: _openCatalog,
           ),
           OverviewScreen(expenses: expenses),
           FavoritesScreen(

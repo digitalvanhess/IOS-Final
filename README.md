@@ -71,6 +71,23 @@ Screen **«Все траты»** ([`history_screen.dart`](lib/screens/history_sc
 | Empty state | «Catalog is Empty» with an icon and a **Reset Catalog** button that restores the seed data |
 | Tests | list/grid without overflow on 3 sizes, swipe + undo, refresh, empty state ([`test/app_test.dart`](test/app_test.dart)) |
 
+### Lab #9: Multi-Screen Global Cart with Live Badge (provider)
+
+Screen **«Покупки»** ([`catalog_screen.dart`](lib/screens/catalog_screen.dart)), opened by the shopping bag icon in the top bar of «Сегодня», and **«Корзина»** ([`cart_screen.dart`](lib/screens/cart_screen.dart)).
+
+| Requirement | Where |
+|---|---|
+| `provider` package | `pubspec.yaml` — the only new dependency |
+| `CartProvider extends ChangeNotifier` | [`cart_provider.dart`](lib/providers/cart_provider.dart): `items`, `add` / `remove` / `toggle` / `clear`, `isInCart`, `count`, `totalPrice` |
+| `ChangeNotifierProvider` above `MaterialApp` | [`main.dart`](lib/main.dart), so every pushed route reads the same cart |
+| Catalog of 6 items with a «В корзину» switch | `MockData.plannedPurchases` (planned student purchases in ₸), each row uses `context.select((c) => c.isInCart(item))` |
+| Live badge in the AppBar | [`CartBadgeButton`](lib/widgets/cart_badge_button.dart): `context.select((c) => c.count)` + `ScaleTransition` pop when the count changes |
+| Cart: list, delete with «Отменить», total in ₸ | `context.watch<CartProvider>()`; UNDO puts the item back at its old index |
+| «Очистить всё» with confirmation | `AlertDialog` (Отмена / Очистить) |
+| Empty state | «Корзина пуста» with a «К покупкам» button |
+| Delete in the cart updates the catalog | no local state on the catalog: switches and badge come from the provider |
+| Tests | both screens without overflow on 3 sizes; badge, total, delete + undo, clear all and sync back to the catalog ([`test/app_test.dart`](test/app_test.dart)) |
+
 ## Project structure
 
 ```
@@ -81,13 +98,18 @@ lib/
 ├── models/
 │   ├── budget.dart               # Daily limit math
 │   ├── category.dart             # Expense categories (label, icon, color)
-│   └── expense.dart              # Expense model
+│   ├── expense.dart              # Expense model
+│   └── planned_purchase.dart     # Catalog item for the cart (LW9)
+├── providers/
+│   └── cart_provider.dart        # Global cart, ChangeNotifier (LW9)
 ├── screens/
 │   ├── root_screen.dart          # BottomNavigationBar + shared state
 │   ├── today_screen.dart         # Tab 1: feed
 │   ├── overview_screen.dart      # Tab 2: stats by category
 │   ├── favorites_screen.dart     # Tab 3: starred expenses
 │   ├── history_screen.dart       # LW8: list/grid, refresh, swipe-to-delete
+│   ├── catalog_screen.dart       # LW9: planned purchases + cart badge
+│   ├── cart_screen.dart          # LW9: cart, total, clear all
 │   ├── profile_screen.dart       # Tab 4: profile & settings
 │   ├── expense_detail_screen.dart
 │   └── add_expense_screen.dart
@@ -97,6 +119,7 @@ lib/
 │   └── format.dart               # ₸ formatting, Russian dates and plurals
 └── widgets/                      # Reusable UI pieces
     ├── budget_ring.dart          # CustomPainter ring
+    ├── cart_badge_button.dart    # Cart icon with animated count (LW9)
     ├── category_chip.dart
     ├── category_tag.dart         # Colored category pill
     ├── expense_grid_card.dart    # Grid cell (LW8)
@@ -105,6 +128,7 @@ lib/
     ├── expense_tile.dart
     ├── favorite_button.dart      # StatefulWidget + setState
     ├── keypad.dart
+    ├── purchase_tile.dart        # Catalog / cart row (LW9)
     ├── section_header.dart
     ├── stat_card.dart
     └── tag_chip.dart

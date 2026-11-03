@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'providers/cart_provider.dart';
 import 'screens/root_screen.dart';
 import 'theme/app_theme.dart';
 
@@ -12,11 +14,15 @@ class StipaApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Stipa',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.dark,
-      home: const RootScreen(),
+    // Above MaterialApp, so every pushed route sees the same cart.
+    return ChangeNotifierProvider(
+      create: (_) => CartProvider(),
+      child: MaterialApp(
+        title: 'Stipa',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.dark,
+        home: const RootScreen(),
+      ),
     );
   }
 }
