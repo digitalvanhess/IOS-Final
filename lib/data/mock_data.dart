@@ -1,8 +1,11 @@
 import 'dart:math';
 
+import 'package:flutter/material.dart';
+
 import '../models/budget.dart';
 import '../models/category.dart';
 import '../models/expense.dart';
+import '../models/planned_purchase.dart';
 
 /// Local mock data. Dates are relative to today so the demo always looks
 /// fresh. Replaced by a REST API and a database in later milestones.
@@ -114,4 +117,56 @@ class MockData {
       description: 'Загружено при обновлении списка.',
     );
   }
+
+  /// Catalog for the «Покупки» screen: things a student plans to buy.
+  static const plannedPurchases = [
+    PlannedPurchase(
+      id: 'p1',
+      title: 'Проездной на месяц',
+      note: 'Студенческий тариф Onay',
+      price: 4000,
+      category: ExpenseCategory.transport,
+      icon: Icons.directions_bus_outlined,
+    ),
+    PlannedPurchase(
+      id: 'p2',
+      title: 'Учебник по матанализу',
+      note: 'Демидович, б/у',
+      price: 6500,
+      category: ExpenseCategory.other,
+      icon: Icons.menu_book_outlined,
+    ),
+    PlannedPurchase(
+      id: 'p3',
+      title: 'Продукты на неделю',
+      note: 'Крупы, курица, овощи',
+      price: 15000,
+      category: ExpenseCategory.groceries,
+      icon: Icons.shopping_cart_outlined,
+    ),
+    PlannedPurchase(
+      id: 'p4',
+      title: 'Беспроводные наушники',
+      note: 'Для пар и библиотеки',
+      price: 14990,
+      category: ExpenseCategory.other,
+      icon: Icons.headphones_outlined,
+    ),
+    PlannedPurchase(
+      id: 'p5',
+      title: 'Абонемент в спортзал',
+      note: 'Студенческий, 12 занятий',
+      price: 12000,
+      category: ExpenseCategory.leisure,
+      icon: Icons.fitness_center,
+    ),
+    PlannedPurchase(
+      id: 'p6',
+      title: 'Билет в кино',
+      note: 'Вечерний сеанс по студенческому',
+      price: 2500,
+      category: ExpenseCategory.leisure,
+      icon: Icons.confirmation_number_outlined,
+    ),
+  ];
 }
