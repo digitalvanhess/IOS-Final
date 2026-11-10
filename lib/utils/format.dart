@@ -43,6 +43,20 @@ class Format {
     return '$sign$buffer ₸';
   }
 
+  /// 109.95 -> "$109.95" (store prices from the API, LW10)
+  static String usd(double value) => '\$${value.toStringAsFixed(2)}';
+
+  /// 120 -> "120 отзывов"
+  static String reviews(int n) {
+    final mod10 = n % 10;
+    final mod100 = n % 100;
+    if (mod10 == 1 && mod100 != 11) return '$n отзыв';
+    if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) {
+      return '$n отзыва';
+    }
+    return '$n отзывов';
+  }
+
   /// "Ср, 7 окт"
   static String shortDate(DateTime date) =>
       '${_weekdays[date.weekday - 1]}, ${date.day} ${_monthsShort[date.month - 1]}';

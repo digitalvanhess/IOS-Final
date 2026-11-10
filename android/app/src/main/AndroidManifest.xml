@@ -1,4 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- LW10: REST API (release builds need it, debug adds it automatically) -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:label="Stipa"
         android:name="${applicationName}"

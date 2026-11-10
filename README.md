@@ -88,6 +88,25 @@ Screen **«Покупки»** ([`catalog_screen.dart`](lib/screens/catalog_scree
 | Delete in the cart updates the catalog | no local state on the catalog: switches and badge come from the provider |
 | Tests | both screens without overflow on 3 sizes; badge, total, delete + undo, clear all and sync back to the catalog ([`test/app_test.dart`](test/app_test.dart)) |
 
+### Lab #10: Cloud Product Explorer & Detail Carousel (REST API)
+
+Screen **«Онлайн-магазин»** ([`products_screen.dart`](lib/screens/products_screen.dart)), opened by the storefront icon in the AppBar of «Покупки», and **«Товар»** ([`product_detail_screen.dart`](lib/screens/product_detail_screen.dart)). Data: `GET https://fakestoreapi.com/products`.
+
+| Requirement | Where |
+|---|---|
+| `http: ^1.2.0` | `pubspec.yaml`; `INTERNET` permission in the Android manifest for release builds |
+| Model `Product` (`id`, `title`, `price`, `description`, `category`, `imageUrl`, `rating`, `reviewCount`) | [`product.dart`](lib/models/product.dart) |
+| `Product.fromJson` with null-safe fallbacks and numeric safety | every number read as `num` then `.toDouble()` / `.toInt()` (`"price": 22` does not crash), `?? fallback` for missing fields |
+| Async fetch, 10 s timeout, `try-catch`, status codes | [`product_api.dart`](lib/services/product_api.dart): `.timeout(10 s)`, `200` → list, `404` / `5xx` / no network / timeout / bad JSON → `ProductApiException` with a Russian message |
+| 3 UI states | `enum LoadState { loading, success, error }` + `switch` in `build`: spinner → `ListView.separated` (thumbnail, title, stars, price) → «Нет связи с магазином» with **Повторить** |
+| Pull-to-refresh | `RefreshIndicator`; on failure the old list stays and a SnackBar explains why |
+| Hero transition | `Hero(tag: 'product_image_${product.id}')` on the thumbnail and on carousel page 0 |
+| Carousel with counter and dots | `PageView.builder` + «1 / 3» pill + `AnimatedContainer` dots (active one stretches into a lime pill) |
+| Description, category badge, sticky «В корзину» | the button adds the product to the **LW9 global cart** (`CartProvider`), the AppBar badge updates live, then turns into «В корзине · открыть» |
+| Share sheet with deep link | `showModalBottomSheet` with `narxoz://store/product/{id}` and **Копировать ссылку** (`Clipboard.setData`) |
+| Prices | API prices are USD. Stipa works in ₸, so the main price is converted with a fixed demo rate `Product.usdToKzt = 520` and the original `$` price is shown next to it; the cart total stays in ₸ |
+| Tests | `fromJson` int/double/null, 404/500/offline errors, loading → list → detail on 3 sizes, error → Повторить, pull-to-refresh, carousel swipe, add to cart, copy link ([`test/products_test.dart`](test/products_test.dart)), all with `MockClient`, no real network |
+
 ## Project structure
 
 ```
@@ -99,7 +118,10 @@ lib/
 │   ├── budget.dart               # Daily limit math
 │   ├── category.dart             # Expense categories (label, icon, color)
 │   ├── expense.dart              # Expense model
+│   ├── product.dart              # Store product + fromJson (LW10)
 │   └── planned_purchase.dart     # Catalog item for the cart (LW9)
+├── services/
+│   └── product_api.dart          # http GET, timeout, errors (LW10)
 ├── providers/
 │   └── cart_provider.dart        # Global cart, ChangeNotifier (LW9)
 ├── screens/
@@ -110,6 +132,8 @@ lib/
 │   ├── history_screen.dart       # LW8: list/grid, refresh, swipe-to-delete
 │   ├── catalog_screen.dart       # LW9: planned purchases + cart badge
 │   ├── cart_screen.dart          # LW9: cart, total, clear all
+│   ├── products_screen.dart      # LW10: API feed, 3 states, refresh
+│   ├── product_detail_screen.dart # LW10: Hero, carousel, share sheet
 │   ├── profile_screen.dart       # Tab 4: profile & settings
 │   ├── expense_detail_screen.dart
 │   └── add_expense_screen.dart
@@ -128,7 +152,9 @@ lib/
     ├── expense_tile.dart
     ├── favorite_button.dart      # StatefulWidget + setState
     ├── keypad.dart
+    ├── product_image.dart        # Network photo with loading/error (LW10)
     ├── purchase_tile.dart        # Catalog / cart row (LW9)
+    ├── rating_stars.dart         # ★★★★☆ + review count (LW10)
     ├── section_header.dart
     ├── stat_card.dart
     └── tag_chip.dart

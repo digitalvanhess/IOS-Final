@@ -8,6 +8,7 @@ import '../theme/app_theme.dart';
 import '../widgets/cart_badge_button.dart';
 import '../widgets/purchase_tile.dart';
 import 'cart_screen.dart';
+import 'products_screen.dart';
 
 /// «Покупки»: planned student purchases with a «В корзину» switch.
 ///
@@ -32,6 +33,15 @@ class CatalogScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Покупки'),
         actions: [
+          // LW10: products from the REST API, added to the same cart.
+          IconButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const ProductsScreen()),
+            ),
+            tooltip: 'Онлайн-магазин',
+            icon: const Icon(Icons.storefront_outlined),
+          ),
           CartBadgeButton(onPressed: () => _openCart(context)),
           const SizedBox(width: 8),
         ],

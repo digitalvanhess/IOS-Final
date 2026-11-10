@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/planned_purchase.dart';
 import '../theme/app_theme.dart';
 import '../utils/format.dart';
+import 'product_image.dart';
 
 /// Row for a [PlannedPurchase]: category-colored icon, title, note, price
 /// and a [trailing] control (a switch in the catalog, a delete button in
@@ -22,14 +23,21 @@ class PurchaseTile extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(12, 12, 8, 12),
         child: Row(
           children: [
-            Container(
+            SizedBox(
               width: 48,
               height: 48,
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.16),
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: Icon(item.icon, color: color),
+              child: item.imageUrl != null
+                  ? ProductImage(
+                      url: item.imageUrl!,
+                      padding: const EdgeInsets.all(4),
+                    )
+                  : DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: color.withValues(alpha: 0.16),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Icon(item.icon, color: color),
+                    ),
             ),
             const SizedBox(width: 12),
             Expanded(
