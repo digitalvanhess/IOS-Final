@@ -19,7 +19,95 @@ class AppColors {
   static const textMuted = Color(0xFF5E5E5E);
 }
 
+/// Light palette for the LW11 dark mode switch (same lime accent).
+class AppLightColors {
+  static const background = Color(0xFFF4F5F0);
+  static const card = Color(0xFFFFFFFF);
+  static const border = Color(0xFFE2E4DC);
+  static const textPrimary = Color(0xFF151515);
+  static const textSecondary = Color(0xFF6B6B6B);
+}
+
 class AppTheme {
+  /// Used by the LW11 «Заметки» screen when dark mode is off.
+  static ThemeData get light {
+    final base = ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.light,
+      colorScheme: const ColorScheme.light(
+        primary: AppColors.accentDark,
+        onPrimary: Colors.black,
+        secondary: AppColors.accent,
+        surface: AppLightColors.background,
+        onSurface: AppLightColors.textPrimary,
+        onSurfaceVariant: AppLightColors.textSecondary,
+        surfaceContainerHighest: AppLightColors.card,
+        outlineVariant: AppLightColors.border,
+        error: AppColors.danger,
+      ),
+      scaffoldBackgroundColor: AppLightColors.background,
+    );
+
+    return base.copyWith(
+      appBarTheme: const AppBarTheme(
+        backgroundColor: AppLightColors.background,
+        foregroundColor: AppLightColors.textPrimary,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        centerTitle: true,
+        titleTextStyle: TextStyle(
+          color: AppLightColors.textPrimary,
+          fontSize: 17,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      cardTheme: CardThemeData(
+        color: AppLightColors.card,
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: const BorderSide(color: AppLightColors.border),
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.accent,
+          foregroundColor: Colors.black,
+          elevation: 0,
+          minimumSize: const Size(0, 52),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+        ),
+      ),
+      // Same shape as the dark listTileTheme, so ListTile can animate
+      // between the two themes.
+      listTileTheme: const ListTileThemeData(
+        iconColor: AppLightColors.textSecondary,
+        subtitleTextStyle: TextStyle(
+          fontSize: 12,
+          color: AppLightColors.textSecondary,
+        ),
+      ),
+      checkboxTheme: CheckboxThemeData(
+        fillColor: WidgetStateProperty.resolveWith(
+          (s) => s.contains(WidgetState.selected) ? AppColors.accent : null,
+        ),
+        checkColor: const WidgetStatePropertyAll(Colors.black),
+      ),
+      switchTheme: SwitchThemeData(
+        thumbColor: WidgetStateProperty.resolveWith(
+          (s) => s.contains(WidgetState.selected) ? Colors.black : null,
+        ),
+        trackColor: WidgetStateProperty.resolveWith(
+          (s) => s.contains(WidgetState.selected) ? AppColors.accent : null,
+        ),
+      ),
+    );
+  }
+
   static ThemeData get dark {
     final base = ThemeData(
       useMaterial3: true,
@@ -29,6 +117,10 @@ class AppTheme {
         onPrimary: Colors.black,
         secondary: AppColors.accent,
         surface: AppColors.background,
+        onSurface: AppColors.textPrimary,
+        onSurfaceVariant: AppColors.textSecondary,
+        surfaceContainerHighest: AppColors.card,
+        outlineVariant: AppColors.border,
         error: AppColors.danger,
       ),
       scaffoldBackgroundColor: AppColors.background,
@@ -99,6 +191,12 @@ class AppTheme {
         trackColor: WidgetStateProperty.resolveWith(
           (s) => s.contains(WidgetState.selected) ? AppColors.accent : null,
         ),
+      ),
+      checkboxTheme: CheckboxThemeData(
+        fillColor: WidgetStateProperty.resolveWith(
+          (s) => s.contains(WidgetState.selected) ? AppColors.accent : null,
+        ),
+        checkColor: const WidgetStatePropertyAll(Colors.black),
       ),
     );
   }

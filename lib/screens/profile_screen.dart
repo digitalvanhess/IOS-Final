@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/budget.dart';
+import '../providers/settings_provider.dart';
 import '../theme/app_theme.dart';
 import '../utils/format.dart';
 import '../widgets/stat_card.dart';
+import 'vault_screen.dart';
 
 /// Tab "Профиль": user info, stats and simple settings toggles.
 class ProfileScreen extends StatefulWidget {
@@ -27,20 +30,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _overspendAlert = true;
   bool _hideAmounts = false;
 
+  /// «Заметки» (LW11): notes, username and dark mode saved on disk.
+  void _openVault() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const VaultScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Saved in LW11 under 'user_display_name', 'Guest User' by default.
+    final name = context.select<SettingsProvider, String>((s) => s.displayName);
+
     return Scaffold(
       appBar: AppBar(title: const Text('Профиль')),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
         children: [
-          const Center(
+          Center(
             child: CircleAvatar(
               radius: 42,
               backgroundColor: AppColors.accentSoft,
               child: Text(
-                'И',
-                style: TextStyle(
+                name.characters.first.toUpperCase(),
+                style: const TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.w700,
                   color: AppColors.accent,
@@ -49,9 +63,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           const SizedBox(height: 12),
-          const Text(
-            'Иван',
+          Text(
+            name,
             textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 4),
@@ -121,6 +137,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Format.dayMonth(widget.budget.nextStipendDate),
                   style: const TextStyle(color: AppColors.textSecondary),
                 ),
+              ),
+              ListTile(
+                onTap: _openVault,
+                leading: const Icon(Icons.sticky_note_2_outlined),
+                title: const Text('Заметки и настройки'),
+                subtitle: const Text('Имя, тема, заметки офлайн'),
+                trailing: const Icon(Icons.chevron_right),
               ),
               const ListTile(
                 leading: Icon(Icons.info_outline),
