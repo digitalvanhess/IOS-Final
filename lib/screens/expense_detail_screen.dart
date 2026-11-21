@@ -40,7 +40,7 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.card,
+        backgroundColor: context.palette.card,
         title: const Text('Удалить трату?'),
         content: Text(widget.expense.title),
         actions: [
@@ -272,16 +272,16 @@ class _Info extends StatelessWidget {
                 child: LinearProgressIndicator(
                   value: share.clamp(0.0, 1.0),
                   minHeight: 10,
-                  backgroundColor: AppColors.cardLight,
+                  backgroundColor: context.palette.cardLight,
                   color: share > 1 ? AppColors.danger : AppColors.accent,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 '${(share * 100).round()}% от ${Format.money(dailyLimit)} в день',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
-                  color: AppColors.textSecondary,
+                  color: context.palette.textSecondary,
                 ),
               ),
             ],
@@ -293,8 +293,8 @@ class _Info extends StatelessWidget {
             title: 'Комментарий',
             child: Text(
               expense.description,
-              style: const TextStyle(
-                color: AppColors.textSecondary,
+              style: TextStyle(
+                color: context.palette.textSecondary,
                 height: 1.5,
               ),
             ),
@@ -309,7 +309,7 @@ class _Info extends StatelessWidget {
                 icon: const Icon(Icons.arrow_back, size: 18),
                 label: const Text('К тратам'),
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.accent,
+                  foregroundColor: context.palette.accentText,
                   side: const BorderSide(color: AppColors.accent),
                   minimumSize: const Size.fromHeight(52),
                   shape: RoundedRectangleBorder(
@@ -352,7 +352,7 @@ class _Panel extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: context.palette.card,
         borderRadius: BorderRadius.circular(18),
       ),
       child: Column(
@@ -360,10 +360,10 @@ class _Panel extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+              color: context.palette.textPrimary,
             ),
           ),
           const SizedBox(height: 12),

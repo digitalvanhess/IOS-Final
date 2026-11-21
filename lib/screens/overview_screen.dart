@@ -51,27 +51,27 @@ class _OverviewScreenState extends State<OverviewScreen> {
             showSelectedIcon: false,
             onSelectionChanged: (s) => setState(() => _period = s.first),
             style: SegmentedButton.styleFrom(
-              backgroundColor: AppColors.card,
+              backgroundColor: context.palette.card,
               selectedBackgroundColor: AppColors.accent,
               selectedForegroundColor: Colors.black,
-              foregroundColor: AppColors.textSecondary,
-              side: const BorderSide(color: AppColors.border),
+              foregroundColor: context.palette.textSecondary,
+              side: BorderSide(color: context.palette.border),
             ),
           ),
           const SizedBox(height: 20),
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: AppColors.surface,
+              color: context.palette.surface,
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: AppColors.border),
+              border: Border.all(color: context.palette.border),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'Потрачено за $days ${_daysWord(days)}',
-                  style: const TextStyle(color: AppColors.textSecondary),
+                  style: TextStyle(color: context.palette.textSecondary),
                 ),
                 const SizedBox(height: 6),
                 FittedBox(
@@ -89,9 +89,9 @@ class _OverviewScreenState extends State<OverviewScreen> {
                 Text(
                   '${inPeriod.length} ${_purchasesWord(inPeriod.length)} · '
                   'в среднем ${Format.money(total / days)} в день',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
-                    color: AppColors.textSecondary,
+                    color: context.palette.textSecondary,
                   ),
                 ),
               ],
@@ -99,12 +99,12 @@ class _OverviewScreenState extends State<OverviewScreen> {
           ),
           const SizedBox(height: 20),
           if (rows.isEmpty)
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(top: 24),
               child: Center(
                 child: Text(
                   'За этот период трат нет',
-                  style: TextStyle(color: AppColors.textSecondary),
+                  style: TextStyle(color: context.palette.textSecondary),
                 ),
               ),
             )
@@ -185,7 +185,7 @@ class _CategoryRow extends StatelessWidget {
                   child: LinearProgressIndicator(
                     value: share,
                     minHeight: 6,
-                    backgroundColor: AppColors.cardLight,
+                    backgroundColor: context.palette.cardLight,
                     color: category.color,
                   ),
                 ),
@@ -198,9 +198,9 @@ class _CategoryRow extends StatelessWidget {
             child: Text(
               '${(share * 100).round()}%',
               textAlign: TextAlign.right,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
-                color: AppColors.textSecondary,
+                color: context.palette.textSecondary,
               ),
             ),
           ),

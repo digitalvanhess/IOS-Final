@@ -126,9 +126,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
             return Text(
               '${_products.length} товаров · цены в ₸ по курсу '
               '1 \$ = ${Product.usdToKzt} ₸',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
-                color: AppColors.textSecondary,
+                color: context.palette.textSecondary,
               ),
             );
           }
@@ -176,10 +176,10 @@ class _ProductRow extends StatelessWidget {
                     product.title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.textPrimary,
+                      color: context.palette.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -197,19 +197,19 @@ class _ProductRow extends StatelessWidget {
                           Format.money(product.priceKzt),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.accent,
+                            color: context.palette.accentText,
                           ),
                         ),
                       ),
                       const SizedBox(width: 8),
                       Text(
                         Format.usd(product.price),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
-                          color: AppColors.textMuted,
+                          color: context.palette.textMuted,
                         ),
                       ),
                     ],
@@ -217,7 +217,7 @@ class _ProductRow extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right, color: AppColors.textMuted),
+            Icon(Icons.chevron_right, color: context.palette.textMuted),
           ],
         ),
       ),
@@ -262,7 +262,7 @@ class _ErrorState extends StatelessWidget {
             Text(
               message,
               textAlign: TextAlign.center,
-              style: const TextStyle(color: AppColors.textSecondary),
+              style: TextStyle(color: context.palette.textSecondary),
             ),
             const SizedBox(height: 24),
             SizedBox(

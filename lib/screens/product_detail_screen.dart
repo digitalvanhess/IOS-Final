@@ -63,7 +63,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   void _share() {
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: AppColors.surface,
+      backgroundColor: context.palette.surface,
       showDragHandle: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -123,10 +123,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       const SizedBox(height: 12),
                       Text(
                         product.title,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
-                          color: AppColors.textPrimary,
+                          color: context.palette.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -142,10 +142,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         children: [
                           Text(
                             Format.money(product.priceKzt),
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 28,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.accent,
+                              color: context.palette.accentText,
                             ),
                           ),
                           Padding(
@@ -153,21 +153,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             child: Text(
                               '${Format.usd(product.price)} · '
                               '1 \$ = ${Product.usdToKzt} ₸',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 13,
-                                color: AppColors.textMuted,
+                                color: context.palette.textMuted,
                               ),
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 20),
-                      const Text(
+                      Text(
                         'Описание',
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.textPrimary,
+                          color: context.palette.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -175,9 +175,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         product.description.isEmpty
                             ? 'Описание не указано.'
                             : product.description,
-                        style: const TextStyle(
+                        style: TextStyle(
                           height: 1.45,
-                          color: AppColors.textSecondary,
+                          color: context.palette.textSecondary,
                         ),
                       ),
                     ],
@@ -294,7 +294,7 @@ class _Dots extends StatelessWidget {
             width: i == active ? 22 : 8,
             height: 8,
             decoration: BoxDecoration(
-              color: i == active ? AppColors.accent : AppColors.cardLight,
+              color: i == active ? AppColors.accent : context.palette.cardLight,
               borderRadius: BorderRadius.circular(4),
             ),
           ),
@@ -319,14 +319,18 @@ class _CategoryBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.sell_outlined, size: 14, color: AppColors.accent),
+          Icon(
+            Icons.sell_outlined,
+            size: 14,
+            color: context.palette.accentText,
+          ),
           const SizedBox(width: 6),
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: AppColors.accent,
+              color: context.palette.accentText,
             ),
           ),
         ],
@@ -355,9 +359,9 @@ class _BottomBar extends StatelessWidget {
     final inCart = context.select<CartProvider, bool>((c) => c.isInCart(item));
 
     return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.surface,
-        border: Border(top: BorderSide(color: AppColors.border)),
+      decoration: BoxDecoration(
+        color: context.palette.surface,
+        border: Border(top: BorderSide(color: context.palette.border)),
       ),
       child: SafeArea(
         top: false,
@@ -368,7 +372,7 @@ class _BottomBar extends StatelessWidget {
                   onPressed: onOpenCart,
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size.fromHeight(56),
-                    foregroundColor: AppColors.accent,
+                    foregroundColor: context.palette.accentText,
                     side: const BorderSide(color: AppColors.accent),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18),
@@ -416,30 +420,30 @@ class _ShareSheet extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 6),
-            const Text(
+            Text(
               'Ссылка откроет этот товар в приложении',
-              style: TextStyle(color: AppColors.textSecondary),
+              style: TextStyle(color: context.palette.textSecondary),
             ),
             const SizedBox(height: 16),
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
               decoration: BoxDecoration(
-                color: AppColors.card,
+                color: context.palette.card,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: AppColors.border),
+                border: Border.all(color: context.palette.border),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.link, size: 18, color: AppColors.accent),
+                  Icon(Icons.link, size: 18, color: context.palette.accentText),
                   const SizedBox(width: 10),
                   Expanded(
                     child: SelectableText(
                       link,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'monospace',
                         fontSize: 14,
-                        color: AppColors.textPrimary,
+                        color: context.palette.textPrimary,
                       ),
                     ),
                   ),

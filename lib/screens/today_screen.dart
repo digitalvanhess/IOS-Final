@@ -180,36 +180,36 @@ class _TopBar extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
-        const Expanded(
+        Expanded(
           child: Text(
             'stipa',
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+              color: context.palette.textPrimary,
             ),
           ),
         ),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           decoration: BoxDecoration(
-            color: AppColors.card,
+            color: context.palette.card,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
+              Icon(
                 Icons.calendar_month_outlined,
                 size: 14,
-                color: AppColors.textSecondary,
+                color: context.palette.textSecondary,
               ),
               const SizedBox(width: 6),
               Text(
                 Format.shortDate(date),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
-                  color: AppColors.textSecondary,
+                  color: context.palette.textSecondary,
                 ),
               ),
             ],
@@ -249,15 +249,18 @@ class _BudgetCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: context.palette.surface,
         borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.palette.border),
       ),
       child: Column(
         children: [
-          const Text(
+          Text(
             'Сегодня можно потратить',
-            style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
+            style: TextStyle(
+              fontSize: 14,
+              color: context.palette.textSecondary,
+            ),
           ),
           const SizedBox(height: 16),
           LayoutBuilder(
@@ -281,14 +284,14 @@ class _BudgetCard extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.cardLight,
+                      color: context.palette.cardLight,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
                       'Потрачено сегодня ${Format.money(spentToday)}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.textSecondary,
+                        color: context.palette.textSecondary,
                       ),
                     ),
                   ),
@@ -313,9 +316,9 @@ class _EmptyList extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: Column(
         children: [
-          const Text(
+          Text(
             'Пока нет трат',
-            style: TextStyle(color: AppColors.textSecondary),
+            style: TextStyle(color: context.palette.textSecondary),
           ),
           TextButton(onPressed: onAddTap, child: const Text('Добавить расход')),
         ],

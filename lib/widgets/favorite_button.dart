@@ -49,7 +49,9 @@ class _FavoriteButtonState extends State<FavoriteButton> {
           _isFavorite ? Icons.star_rounded : Icons.star_outline_rounded,
           key: ValueKey(_isFavorite),
           size: widget.size,
-          color: _isFavorite ? AppColors.accent : AppColors.textSecondary,
+          color: _isFavorite
+              ? context.palette.accentText
+              : context.palette.textSecondary,
         ),
       ),
     );

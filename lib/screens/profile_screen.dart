@@ -54,10 +54,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               backgroundColor: AppColors.accentSoft,
               child: Text(
                 name.characters.first.toUpperCase(),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.accent,
+                  color: context.palette.accentText,
                 ),
               ),
             ),
@@ -71,10 +71,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 4),
-          const Text(
+          Text(
             'Студент · стипендия раз в месяц',
             textAlign: TextAlign.center,
-            style: TextStyle(color: AppColors.textSecondary),
+            style: TextStyle(color: context.palette.textSecondary),
           ),
           const SizedBox(height: 24),
           Row(
@@ -135,7 +135,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 title: const Text('Следующая стипендия'),
                 trailing: Text(
                   Format.dayMonth(widget.budget.nextStipendDate),
-                  style: const TextStyle(color: AppColors.textSecondary),
+                  style: TextStyle(color: context.palette.textSecondary),
                 ),
               ),
               ListTile(

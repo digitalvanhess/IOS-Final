@@ -135,7 +135,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       body: RefreshIndicator(
         onRefresh: _refresh,
         color: AppColors.accent,
-        backgroundColor: AppColors.card,
+        backgroundColor: context.palette.card,
         child: _items.isEmpty
             ? _EmptyCatalog(onReset: _resetCatalog)
             : _isGrid
@@ -152,11 +152,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.only(bottom: 24),
       itemCount: _items.length,
-      separatorBuilder: (_, _) => const Divider(
+      separatorBuilder: (_, _) => Divider(
         height: 1,
         thickness: 0.5,
         indent: 76,
-        color: AppColors.border,
+        color: context.palette.border,
       ),
       itemBuilder: (context, index) {
         final expense = _items[index];
@@ -239,10 +239,10 @@ class _EmptyCatalog extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
+              Icon(
                 Icons.inventory_2_outlined,
                 size: 64,
-                color: AppColors.textMuted,
+                color: context.palette.textMuted,
               ),
               const SizedBox(height: 16),
               const Text(
@@ -250,11 +250,11 @@ class _EmptyCatalog extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 8),
-              const Text(
+              Text(
                 'Все траты удалены. Верните демо-данные или потяните вниз, '
                 'чтобы загрузить новую.',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: AppColors.textSecondary),
+                style: TextStyle(color: context.palette.textSecondary),
               ),
               const SizedBox(height: 24),
               SizedBox(

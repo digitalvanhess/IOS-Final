@@ -48,10 +48,10 @@ class ExpenseTile extends StatelessWidget {
                       expense.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
-                        color: AppColors.textPrimary,
+                        color: context.palette.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -60,9 +60,9 @@ class ExpenseTile extends StatelessWidget {
                       '${expense.category.label}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.textSecondary,
+                        color: context.palette.textSecondary,
                       ),
                     ),
                   ],
@@ -71,10 +71,10 @@ class ExpenseTile extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 Format.money(-expense.amount),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
+                  color: context.palette.textPrimary,
                 ),
               ),
               FavoriteButton(

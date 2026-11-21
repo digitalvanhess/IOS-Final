@@ -77,7 +77,7 @@ class _CountBadgeState extends State<_CountBadge>
         decoration: BoxDecoration(
           color: AppColors.accent,
           borderRadius: BorderRadius.circular(9),
-          border: Border.all(color: AppColors.background, width: 1.5),
+          border: Border.all(color: context.palette.background, width: 1.5),
         ),
         child: Text(
           '${widget.count}',

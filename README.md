@@ -115,7 +115,7 @@ Screen **«Заметки»** ([`vault_screen.dart`](lib/screens/vault_screen.da
 |---|---|
 | `shared_preferences: ^2.2.2` | `pubspec.yaml` |
 | Load before `runApp()` | [`main.dart`](lib/main.dart): `WidgetsFlutterBinding.ensureInitialized()` → `await SharedPreferences.getInstance()` → `getBool('app_theme_dark_mode') ?? false`, `getString('user_display_name') ?? 'Guest User'` → `runApp(...)` |
-| Dark mode switch, no flicker | `SwitchListTile` → `SettingsProvider.setDarkMode` → `setBool('app_theme_dark_mode', v)`. The screen picks `AppTheme.dark` / `AppTheme.light` from a value that is already in memory, so its first frame is drawn in the saved theme |
+| Dark mode switch, no flicker | `SwitchListTile` → `SettingsProvider.setDarkMode` → `setBool('app_theme_dark_mode', v)`. `MaterialApp` gets `theme` / `darkTheme` and `themeMode` from `SettingsProvider`, so the whole app switches. Neutral colors live in the `AppPalette` theme extension (`context.palette.card`), so every screen repaints. The value is in memory before `runApp()`, so the first frame is already in the saved theme |
 | Username with «Сохранить» | `TextField` + button → `setString('user_display_name', name)`; header «Привет, {name}» with `'Guest User'` fallback; an empty name removes the key. The Профиль tab shows the same name |
 | `NoteItem(id, title, dateText, isCompleted)` | [`note_item.dart`](lib/models/note_item.dart): `toJson()`, `factory NoteItem.fromJson(...)` with null-safe fallbacks |
 | List ↔ one JSON string | [`notes_storage.dart`](lib/services/notes_storage.dart): `jsonEncode(notes.map((n) => n.toJson()).toList())` → `setString('saved_notes_list', ...)`; `jsonDecode` → `fromJson` on load, corrupted data → empty list |
@@ -158,7 +158,7 @@ lib/
 │   ├── expense_detail_screen.dart
 │   └── add_expense_screen.dart
 ├── theme/
-│   └── app_theme.dart            # Colors, dark + light ThemeData
+│   └── app_theme.dart            # AppPalette (dark / light) + ThemeData
 ├── utils/
 │   └── format.dart               # ₸ formatting, Russian dates and plurals
 └── widgets/                      # Reusable UI pieces

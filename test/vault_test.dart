@@ -204,6 +204,29 @@ void main() {
     expect(_vaultBrightness(tester), Brightness.dark);
   });
 
+  testWidgets('dark mode switch themes the whole app', (tester) async {
+    Brightness tabBrightness() =>
+        Theme.of(tester.element(find.byType(BottomNavigationBar))).brightness;
+
+    // Saved dark theme: the very first frame of the main screen is dark.
+    final prefs = await _launch(
+      tester,
+      disk: {SettingsProvider.darkModeKey: true},
+    );
+    expect(tabBrightness(), Brightness.dark);
+
+    await _openVault(tester);
+    await tester.tap(find.byKey(const ValueKey('dark_mode_switch')));
+    await tester.pumpAndSettle();
+    expect(prefs.getBool(SettingsProvider.darkModeKey), isFalse);
+
+    // Back on the tabs: they are light now too.
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    expect(tabBrightness(), Brightness.light);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('delete syncs disk, undo restores it', (tester) async {
     final prefs = await _launch(
       tester,

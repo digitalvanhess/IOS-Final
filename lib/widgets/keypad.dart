@@ -29,7 +29,7 @@ class Keypad extends StatelessWidget {
               children: [
                 for (var i = 0; i < row.length; i++) ...[
                   if (i > 0) const SizedBox(width: 8),
-                  Expanded(child: _key(row[i])),
+                  Expanded(child: _key(context, row[i])),
                 ],
               ],
             ),
@@ -38,10 +38,10 @@ class Keypad extends StatelessWidget {
     );
   }
 
-  Widget _key(String label) {
+  Widget _key(BuildContext context, String label) {
     final isBackspace = label == '<';
     return Material(
-      color: AppColors.card,
+      color: context.palette.card,
       borderRadius: BorderRadius.circular(14),
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
@@ -50,17 +50,17 @@ class Keypad extends StatelessWidget {
           height: 52,
           child: Center(
             child: isBackspace
-                ? const Icon(
+                ? Icon(
                     Icons.backspace_outlined,
-                    color: AppColors.textSecondary,
+                    color: context.palette.textSecondary,
                     size: 22,
                   )
                 : Text(
                     label,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.textPrimary,
+                      color: context.palette.textPrimary,
                     ),
                   ),
           ),

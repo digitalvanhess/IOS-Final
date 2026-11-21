@@ -56,10 +56,10 @@ class _EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
+            Icon(
               Icons.star_outline_rounded,
               size: 64,
-              color: AppColors.textMuted,
+              color: context.palette.textMuted,
             ),
             const SizedBox(height: 16),
             const Text(
@@ -67,10 +67,10 @@ class _EmptyState extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'Отмечайте звёздочкой частые траты, чтобы быстро находить их.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: AppColors.textSecondary),
+              style: TextStyle(color: context.palette.textSecondary),
             ),
             const SizedBox(height: 24),
             SizedBox(

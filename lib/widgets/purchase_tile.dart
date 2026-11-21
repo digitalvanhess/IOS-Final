@@ -48,10 +48,10 @@ class PurchaseTile extends StatelessWidget {
                     item.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.textPrimary,
+                      color: context.palette.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -59,18 +59,18 @@ class PurchaseTile extends StatelessWidget {
                     item.note.isEmpty ? item.category.label : item.note,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: AppColors.textSecondary,
+                      color: context.palette.textSecondary,
                     ),
                   ),
                   const SizedBox(height: 6),
                   Text(
                     Format.money(item.price),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
+                      color: context.palette.textPrimary,
                     ),
                   ),
                 ],

@@ -24,10 +24,10 @@ class CategoryChip extends StatelessWidget {
         duration: const Duration(milliseconds: 180),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
         decoration: BoxDecoration(
-          color: selected ? AppColors.accentSoft : AppColors.card,
+          color: selected ? AppColors.accentSoft : context.palette.card,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: selected ? AppColors.accent : AppColors.border,
+            color: selected ? AppColors.accent : context.palette.border,
           ),
         ),
         child: Row(
@@ -36,7 +36,9 @@ class CategoryChip extends StatelessWidget {
             Icon(
               category.icon,
               size: 16,
-              color: selected ? AppColors.accent : AppColors.textSecondary,
+              color: selected
+                  ? context.palette.accentText
+                  : context.palette.textSecondary,
             ),
             const SizedBox(width: 6),
             Text(
@@ -44,7 +46,9 @@ class CategoryChip extends StatelessWidget {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
-                color: selected ? AppColors.accent : AppColors.textPrimary,
+                color: selected
+                    ? context.palette.accentText
+                    : context.palette.textPrimary,
               ),
             ),
           ],

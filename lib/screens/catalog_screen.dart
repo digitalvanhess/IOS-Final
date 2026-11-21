@@ -52,11 +52,11 @@ class CatalogScreen extends StatelessWidget {
         separatorBuilder: (_, _) => const SizedBox(height: 8),
         itemBuilder: (context, index) {
           if (index == 0) {
-            return const Padding(
+            return Padding(
               padding: EdgeInsets.only(bottom: 4),
               child: Text(
                 'Отметьте, что хотите купить со стипендии',
-                style: TextStyle(color: AppColors.textSecondary),
+                style: TextStyle(color: context.palette.textSecondary),
               ),
             );
           }
@@ -88,9 +88,12 @@ class _CatalogRow extends StatelessWidget {
             value: inCart,
             onChanged: (_) => context.read<CartProvider>().toggle(item),
           ),
-          const Text(
+          Text(
             'В корзину',
-            style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
+            style: TextStyle(
+              fontSize: 11,
+              color: context.palette.textSecondary,
+            ),
           ),
         ],
       ),

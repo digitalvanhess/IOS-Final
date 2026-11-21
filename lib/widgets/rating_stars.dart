@@ -39,7 +39,7 @@ class RatingStars extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: size - 2,
-              color: AppColors.textSecondary,
+              color: context.palette.textSecondary,
             ),
           ),
         ),

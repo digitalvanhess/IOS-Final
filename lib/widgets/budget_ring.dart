@@ -38,7 +38,11 @@ class BudgetRing extends StatelessWidget {
             curve: Curves.easeOutCubic,
             builder: (context, value, _) => CustomPaint(
               size: Size.square(size),
-              painter: _RingPainter(progress: value, color: color),
+              painter: _RingPainter(
+                progress: value,
+                color: color,
+                trackColor: context.palette.cardLight,
+              ),
             ),
           ),
           Padding(
@@ -55,7 +59,7 @@ class BudgetRing extends StatelessWidget {
                       letterSpacing: -1,
                       color: overspent
                           ? AppColors.danger
-                          : AppColors.textPrimary,
+                          : context.palette.textPrimary,
                     ),
                   ),
                 ),
@@ -65,9 +69,9 @@ class BudgetRing extends StatelessWidget {
                       ? 'перерасход за день'
                       : 'из ${Format.money(dailyLimit)} на день',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
-                    color: AppColors.textSecondary,
+                    color: context.palette.textSecondary,
                   ),
                 ),
               ],
@@ -82,8 +86,13 @@ class BudgetRing extends StatelessWidget {
 class _RingPainter extends CustomPainter {
   final double progress;
   final Color color;
+  final Color trackColor;
 
-  _RingPainter({required this.progress, required this.color});
+  _RingPainter({
+    required this.progress,
+    required this.color,
+    required this.trackColor,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -96,7 +105,7 @@ class _RingPainter extends CustomPainter {
     );
 
     final track = Paint()
-      ..color = AppColors.cardLight
+      ..color = trackColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = stroke;
     canvas.drawArc(rect, 0, math.pi * 2, false, track);
@@ -111,5 +120,7 @@ class _RingPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_RingPainter old) =>
-      old.progress != progress || old.color != color;
+      old.progress != progress ||
+      old.color != color ||
+      old.trackColor != trackColor;
 }

@@ -46,10 +46,10 @@ class ExpenseListRow extends StatelessWidget {
                     expense.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.textPrimary,
+                      color: context.palette.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -62,9 +62,9 @@ class ExpenseListRow extends StatelessWidget {
                           Format.relativeDay(expense.date),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: AppColors.textSecondary,
+                            color: context.palette.textSecondary,
                           ),
                         ),
                       ),
@@ -76,10 +76,10 @@ class ExpenseListRow extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               Format.money(-expense.amount),
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: context.palette.textPrimary,
               ),
             ),
             FavoriteButton(

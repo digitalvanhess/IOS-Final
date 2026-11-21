@@ -20,13 +20,8 @@ class VaultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = context.select<SettingsProvider, bool>((s) => s.isDarkMode);
-    // The saved theme is already known (read in main()), so the first frame
-    // uses it: no light -> dark flash.
-    return Theme(
-      data: isDark ? AppTheme.dark : AppTheme.light,
-      child: const _VaultView(),
-    );
+    // The theme comes from MaterialApp (themeMode in main.dart).
+    return const _VaultView();
   }
 }
 
@@ -249,10 +244,10 @@ class _Header extends StatelessWidget {
           backgroundColor: AppColors.accentSoft,
           child: Text(
             name.characters.first.toUpperCase(),
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w700,
-              color: AppColors.accentDark,
+              color: context.palette.accentText,
             ),
           ),
         ),

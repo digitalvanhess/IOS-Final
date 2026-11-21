@@ -84,9 +84,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                     const SizedBox(height: 12),
                     _AmountDisplay(amount: _amount, overLimit: _overLimit),
                     const SizedBox(height: 4),
-                    const Text(
+                    Text(
                       'Сколько потратили?',
-                      style: TextStyle(color: AppColors.textSecondary),
+                      style: TextStyle(color: context.palette.textSecondary),
                     ),
                     const SizedBox(height: 20),
                     Wrap(
@@ -108,9 +108,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                       textCapitalization: TextCapitalization.sentences,
                       decoration: InputDecoration(
                         hintText: 'Комментарий (необязательно)',
-                        hintStyle: const TextStyle(color: AppColors.textMuted),
+                        hintStyle: TextStyle(color: context.palette.textMuted),
                         filled: true,
-                        fillColor: AppColors.card,
+                        fillColor: context.palette.card,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
                           borderSide: BorderSide.none,
@@ -170,8 +170,8 @@ class _AmountDisplay extends StatelessWidget {
             fontWeight: FontWeight.w700,
             letterSpacing: -1.5,
             color: amount == 0
-                ? AppColors.textMuted
-                : (overLimit ? AppColors.danger : AppColors.textPrimary),
+                ? context.palette.textMuted
+                : (overLimit ? AppColors.danger : context.palette.textPrimary),
           ),
         ),
       ),
@@ -193,11 +193,11 @@ class _Hint extends StatelessWidget {
     final Color background;
     if (amount == 0) {
       text = 'Введите сумму — сразу покажем, сколько останется на сегодня';
-      color = AppColors.textSecondary;
-      background = AppColors.card;
+      color = context.palette.textSecondary;
+      background = context.palette.card;
     } else if (leftAfter >= 0) {
       text = 'После этой траты на сегодня останется ${Format.money(leftAfter)}';
-      color = AppColors.accent;
+      color = context.palette.accentText;
       background = AppColors.accentSoft;
     } else {
       text =

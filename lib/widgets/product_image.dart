@@ -52,10 +52,10 @@ class ProductImage extends StatelessWidget {
                   ),
                 );
               },
-              errorBuilder: (_, _, _) => const Center(
+              errorBuilder: (_, _, _) => Center(
                 child: Icon(
                   Icons.image_not_supported_outlined,
-                  color: AppColors.textMuted,
+                  color: context.palette.textMuted,
                 ),
               ),
             ),

@@ -65,10 +65,10 @@ class ExpenseGridCard extends StatelessWidget {
                     expense.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.textPrimary,
+                      color: context.palette.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -77,10 +77,10 @@ class ExpenseGridCard extends StatelessWidget {
                   Text(
                     Format.money(-expense.amount),
                     maxLines: 1,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary,
+                      color: context.palette.textPrimary,
                     ),
                   ),
                 ],

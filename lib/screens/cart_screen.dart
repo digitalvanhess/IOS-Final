@@ -34,7 +34,7 @@ class CartScreen extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.card,
+        backgroundColor: context.palette.card,
         title: const Text('Очистить корзину?'),
         content: const Text('Все выбранные покупки будут убраны.'),
         actions: [
@@ -91,7 +91,7 @@ class CartScreen extends StatelessWidget {
                         trailing: IconButton(
                           onPressed: () => _remove(context, item),
                           tooltip: 'Убрать',
-                          color: AppColors.textSecondary,
+                          color: context.palette.textSecondary,
                           icon: const Icon(Icons.delete_outline),
                         ),
                       );
@@ -114,9 +114,9 @@ class _TotalBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.surface,
-        border: Border(top: BorderSide(color: AppColors.border)),
+      decoration: BoxDecoration(
+        color: context.palette.surface,
+        border: Border(top: BorderSide(color: context.palette.border)),
       ),
       child: SafeArea(
         top: false,
@@ -127,15 +127,15 @@ class _TotalBar extends StatelessWidget {
               Expanded(
                 child: Text(
                   'Итого · $count ${Format.purchasesWord(count)}',
-                  style: const TextStyle(color: AppColors.textSecondary),
+                  style: TextStyle(color: context.palette.textSecondary),
                 ),
               ),
               Text(
                 Format.money(total),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.accent,
+                  color: context.palette.accentText,
                 ),
               ),
             ],
@@ -157,10 +157,10 @@ class _EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
+            Icon(
               Icons.shopping_cart_outlined,
               size: 64,
-              color: AppColors.textMuted,
+              color: context.palette.textMuted,
             ),
             const SizedBox(height: 16),
             const Text(
@@ -168,11 +168,11 @@ class _EmptyState extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'Включите «В корзину» у покупок в каталоге, '
               'и здесь появится итоговая сумма.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: AppColors.textSecondary),
+              style: TextStyle(color: context.palette.textSecondary),
             ),
             const SizedBox(height: 24),
             SizedBox(
