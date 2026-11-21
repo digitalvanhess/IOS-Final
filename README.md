@@ -107,6 +107,22 @@ Screen **«Онлайн-магазин»** ([`products_screen.dart`](lib/screens
 | Prices | API prices are USD. Stipa works in ₸, so the main price is converted with a fixed demo rate `Product.usdToKzt = 520` and the original `$` price is shown next to it; the cart total stays in ₸ |
 | Tests | `fromJson` int/double/null, 404/500/offline errors, loading → list → detail on 3 sizes, error → Повторить, pull-to-refresh, carousel swipe, add to cart, copy link ([`test/products_test.dart`](test/products_test.dart)), all with `MockClient`, no real network |
 
+### Lab #11: Offline Notes & Settings Vault (SharedPreferences + JSON)
+
+Screen **«Заметки»** ([`vault_screen.dart`](lib/screens/vault_screen.dart)), opened from **Профиль → Заметки и настройки**. Everything on it survives a force-quit.
+
+| Requirement | Where |
+|---|---|
+| `shared_preferences: ^2.2.2` | `pubspec.yaml` |
+| Load before `runApp()` | [`main.dart`](lib/main.dart): `WidgetsFlutterBinding.ensureInitialized()` → `await SharedPreferences.getInstance()` → `getBool('app_theme_dark_mode') ?? false`, `getString('user_display_name') ?? 'Guest User'` → `runApp(...)` |
+| Dark mode switch, no flicker | `SwitchListTile` → `SettingsProvider.setDarkMode` → `setBool('app_theme_dark_mode', v)`. The screen picks `AppTheme.dark` / `AppTheme.light` from a value that is already in memory, so its first frame is drawn in the saved theme |
+| Username with «Сохранить» | `TextField` + button → `setString('user_display_name', name)`; header «Привет, {name}» with `'Guest User'` fallback; an empty name removes the key. The Профиль tab shows the same name |
+| `NoteItem(id, title, dateText, isCompleted)` | [`note_item.dart`](lib/models/note_item.dart): `toJson()`, `factory NoteItem.fromJson(...)` with null-safe fallbacks |
+| List ↔ one JSON string | [`notes_storage.dart`](lib/services/notes_storage.dart): `jsonEncode(notes.map((n) => n.toJson()).toList())` → `setString('saved_notes_list', ...)`; `jsonDecode` → `fromJson` on load, corrupted data → empty list |
+| Add / toggle / delete synced to disk | `_addNote` (`insert(0, …)`, prepend), `_toggleNote` (checkbox or tap), `_deleteNote` (with «Отменить»), each followed by `NotesStorage.save` |
+| Cold restart | add 2 notes, switch dark mode, save a name, swipe the app away, reopen → Профиль shows the name, «Заметки» opens dark with both notes and their checkboxes |
+| Tests | JSON round trip and fallbacks, corrupted JSON, both themes on 3 sizes, simulated force-quit + relaunch, dark on the very first frame, delete + undo on disk, empty name → Guest User ([`test/vault_test.dart`](test/vault_test.dart)) |
+
 ## Project structure
 
 ```
@@ -118,12 +134,15 @@ lib/
 │   ├── budget.dart               # Daily limit math
 │   ├── category.dart             # Expense categories (label, icon, color)
 │   ├── expense.dart              # Expense model
+│   ├── note_item.dart            # Note + toJson/fromJson (LW11)
 │   ├── product.dart              # Store product + fromJson (LW10)
 │   └── planned_purchase.dart     # Catalog item for the cart (LW9)
 ├── services/
+│   ├── notes_storage.dart        # Notes list <-> JSON in SharedPreferences (LW11)
 │   └── product_api.dart          # http GET, timeout, errors (LW10)
 ├── providers/
-│   └── cart_provider.dart        # Global cart, ChangeNotifier (LW9)
+│   ├── cart_provider.dart        # Global cart, ChangeNotifier (LW9)
+│   └── settings_provider.dart    # Dark mode + username on disk (LW11)
 ├── screens/
 │   ├── root_screen.dart          # BottomNavigationBar + shared state
 │   ├── today_screen.dart         # Tab 1: feed
@@ -135,10 +154,11 @@ lib/
 │   ├── products_screen.dart      # LW10: API feed, 3 states, refresh
 │   ├── product_detail_screen.dart # LW10: Hero, carousel, share sheet
 │   ├── profile_screen.dart       # Tab 4: profile & settings
+│   ├── vault_screen.dart         # LW11: offline notes, name, dark mode
 │   ├── expense_detail_screen.dart
 │   └── add_expense_screen.dart
 ├── theme/
-│   └── app_theme.dart            # Colors and ThemeData
+│   └── app_theme.dart            # Colors, dark + light ThemeData
 ├── utils/
 │   └── format.dart               # ₸ formatting, Russian dates and plurals
 └── widgets/                      # Reusable UI pieces

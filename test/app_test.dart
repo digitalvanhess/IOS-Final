@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stipa/main.dart';
+import 'package:stipa/providers/settings_provider.dart';
 import 'package:stipa/screens/cart_screen.dart';
 import 'package:stipa/screens/catalog_screen.dart';
 import 'package:stipa/screens/add_expense_screen.dart';
 import 'package:stipa/screens/expense_detail_screen.dart';
 import 'package:stipa/screens/history_screen.dart';
+import 'package:stipa/services/notes_storage.dart';
 import 'package:stipa/utils/format.dart';
 import 'package:stipa/widgets/expense_list_row.dart';
 
@@ -20,7 +23,14 @@ Future<void> _pumpApp(WidgetTester tester, Size size) async {
   tester.view.physicalSize = size * 3;
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
-  await tester.pumpWidget(const StipaApp());
+  SharedPreferences.setMockInitialValues({});
+  final prefs = await SharedPreferences.getInstance();
+  await tester.pumpWidget(
+    StipaApp(
+      settings: SettingsProvider.fromPrefs(prefs),
+      notesStorage: NotesStorage(prefs),
+    ),
+  );
   await tester.pumpAndSettle();
 }
 
