@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'lw12/bloc/auth/auth_cubit.dart';
+import 'lw12/bloc/cart/cart_bloc.dart';
 import 'providers/cart_provider.dart';
 import 'providers/settings_provider.dart';
 import 'screens/root_screen.dart';
@@ -38,10 +41,14 @@ class StipaApp extends StatelessWidget {
   final SettingsProvider settings;
   final NotesStorage notesStorage;
 
+  /// LW12 fake login round trip. Tests can shorten it.
+  final Duration authDelay;
+
   const StipaApp({
     super.key,
     required this.settings,
     required this.notesStorage,
+    this.authDelay = const Duration(seconds: 2),
   });
 
   @override
@@ -54,14 +61,23 @@ class StipaApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: settings),
         Provider.value(value: notesStorage),
       ],
-      child: MaterialApp(
-        title: 'Stipa',
-        debugShowCheckedModeBanner: false,
-        // The Stipa screens are drawn in the dark palette from the Figma
-        // mockup. The LW11 dark mode switch themes the «Заметки» screen
-        // (see VaultScreen).
-        theme: AppTheme.dark,
-        home: const RootScreen(),
+      // LW12: the BLoC shop has its own AuthCubit and CartBloc, separate
+      // from the LW9 CartProvider. Also above MaterialApp, so the login,
+      // catalog and cart routes share one instance of each.
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => AuthCubit(delay: authDelay)),
+          BlocProvider(create: (_) => CartBloc()),
+        ],
+        child: MaterialApp(
+          title: 'Stipa',
+          debugShowCheckedModeBanner: false,
+          // The Stipa screens are drawn in the dark palette from the Figma
+          // mockup. The LW11 dark mode switch themes the «Заметки» screen
+          // (see VaultScreen).
+          theme: AppTheme.dark,
+          home: const RootScreen(),
+        ),
       ),
     );
   }

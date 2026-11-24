@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
+import '../lw12/bloc/auth/auth_cubit.dart';
+import '../lw12/screens/login_screen.dart';
+import '../lw12/screens/shop_catalog_screen.dart';
 import '../models/budget.dart';
 import '../providers/settings_provider.dart';
 import '../theme/app_theme.dart';
@@ -35,6 +39,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const VaultScreen()),
+    );
+  }
+
+  /// LW12 BLoC shop. Already logged in → straight to the catalog.
+  void _openShop() {
+    final loggedIn = context.read<AuthCubit>().state is AuthSuccess;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) =>
+            loggedIn ? const ShopCatalogScreen() : const LoginScreen(),
+      ),
     );
   }
 
@@ -143,6 +159,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 leading: const Icon(Icons.sticky_note_2_outlined),
                 title: const Text('Заметки и настройки'),
                 subtitle: const Text('Имя, тема, заметки офлайн'),
+                trailing: const Icon(Icons.chevron_right),
+              ),
+              ListTile(
+                onTap: _openShop,
+                leading: const Icon(Icons.storefront_outlined),
+                title: const Text('Магазин с входом'),
+                subtitle: const Text('Вход и корзина на BLoC'),
                 trailing: const Icon(Icons.chevron_right),
               ),
               const ListTile(
