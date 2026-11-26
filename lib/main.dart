@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'lw12/bloc/auth/auth_cubit.dart';
 import 'lw12/bloc/cart/cart_bloc.dart';
+import 'lw13/services/diary_storage.dart';
 import 'providers/cart_provider.dart';
 import 'providers/settings_provider.dart';
 import 'screens/root_screen.dart';
@@ -33,6 +34,7 @@ Future<void> main() async {
         displayName: displayName,
       ),
       notesStorage: NotesStorage(prefs),
+      diaryStorage: DiaryStorage(prefs),
     ),
   );
 }
@@ -41,6 +43,9 @@ class StipaApp extends StatelessWidget {
   final SettingsProvider settings;
   final NotesStorage notesStorage;
 
+  /// LW13 photo diary entries.
+  final DiaryStorage diaryStorage;
+
   /// LW12 fake login round trip. Tests can shorten it.
   final Duration authDelay;
 
@@ -48,6 +53,7 @@ class StipaApp extends StatelessWidget {
     super.key,
     required this.settings,
     required this.notesStorage,
+    required this.diaryStorage,
     this.authDelay = const Duration(seconds: 2),
   });
 
@@ -60,6 +66,7 @@ class StipaApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider.value(value: settings),
         Provider.value(value: notesStorage),
+        Provider.value(value: diaryStorage),
       ],
       // LW12: the BLoC shop has its own AuthCubit and CartBloc, separate
       // from the LW9 CartProvider. Also above MaterialApp, so the login,

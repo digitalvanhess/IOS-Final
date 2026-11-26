@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../lw12/bloc/auth/auth_cubit.dart';
 import '../lw12/screens/login_screen.dart';
 import '../lw12/screens/shop_catalog_screen.dart';
+import '../lw13/screens/photo_diary_screen.dart';
 import '../models/budget.dart';
 import '../providers/settings_provider.dart';
 import '../theme/app_theme.dart';
@@ -39,6 +40,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const VaultScreen()),
+    );
+  }
+
+  /// LW13 geotagged photo diary: camera, gallery and GPS.
+  void _openPhotoDiary() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const PhotoDiaryScreen()),
     );
   }
 
@@ -166,6 +175,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 leading: const Icon(Icons.storefront_outlined),
                 title: const Text('Магазин с входом'),
                 subtitle: const Text('Вход и корзина на BLoC'),
+                trailing: const Icon(Icons.chevron_right),
+              ),
+              ListTile(
+                onTap: _openPhotoDiary,
+                leading: const Icon(Icons.photo_camera_outlined),
+                title: const Text('Фотодневник'),
+                subtitle: const Text('Фото, GPS и подписи офлайн'),
                 trailing: const Icon(Icons.chevron_right),
               ),
               const ListTile(

@@ -141,6 +141,30 @@ Screens **«Вход»** ([`login_screen.dart`](lib/lw12/screens/login_screen.da
 | Providers | `MultiBlocProvider` above `MaterialApp` in [`main.dart`](lib/main.dart), so the three routes share one `AuthCubit` and one `CartBloc` |
 | Tests | Cubit transitions for valid and every invalid input, Equatable equality, ignored double tap, every `CartBloc` event, immutability, SnackBar color/behavior + spinner, full login → catalog → cart flow with badge sync on 3 sizes, back navigation and logout ([`test/lw12_test.dart`](test/lw12_test.dart)) |
 
+### Lab #13: Multimedia & Device Hardware (camera, gallery, GPS)
+
+Screen **«📸 Narxoz Photo Journal»** ([`photo_diary_screen.dart`](lib/lw13/screens/photo_diary_screen.dart)), opened from **Профиль → Фотодневник**. Code in [`lib/lw13/`](lib/lw13).
+
+| Requirement | Where |
+|---|---|
+| Android permissions | [`AndroidManifest.xml`](android/app/src/main/AndroidManifest.xml): `CAMERA`, `ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION`, `READ_MEDIA_IMAGES` (+ `READ_EXTERNAL_STORAGE` up to API 32, camera feature not required) |
+| iOS usage descriptions | [`Info.plist`](ios/Runner/Info.plist): `NSCameraUsageDescription`, `NSPhotoLibraryUsageDescription`, `NSLocationWhenInUseUsageDescription`. permission_handler (Swift Package Manager) turns on its camera code from the same plist key |
+| GPS off guard | `isLocationServiceEnabled()` first → dialog «GPS выключен» → **Включить GPS** calls `Geolocator.openLocationSettings()` |
+| Camera + gallery | two buttons (Камера / Галерея) and a modal bottom sheet on the preview tap; `ImageSource.camera` / `ImageSource.gallery` ([`media_service.dart`](lib/lw13/services/media_service.dart)) |
+| Compression | `pickImage(imageQuality: 80, maxWidth: 1080)`; the file is copied from the picker cache into the app documents folder, so it survives restarts |
+| Camera runtime permission | `Permission.camera.request()` (permission_handler): denied → SnackBar, permanently denied → dialog → `openAppSettings()`. The gallery uses the system photo picker, which needs no permission |
+| Preview | `ClipRRect(BorderRadius.circular(20))` + `Image.file(File(path))` ([`diary_photo.dart`](lib/lw13/widgets/diary_photo.dart)), camera icon placeholder when empty, broken-image icon if the file is gone |
+| Location permission | `Geolocator.checkPermission()` → `requestPermission()` only if denied; `denied` → SnackBar, `deniedForever` → dialog → `Geolocator.openAppSettings()` ([`location_service.dart`](lib/lw13/services/location_service.dart)) |
+| GPS fix | after every photo automatically and on **Определить GPS-координаты**; `CircularProgressIndicator` «Ищем спутники GPS…» while locking; `getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.high, timeLimit: 20 s))` (`desiredAccuracy` is deprecated in geolocator 14) |
+| Display | latitude / longitude (6 decimals), accuracy `± 12.4 м`, altitude, timestamp `2026-11-24 14:30:15` |
+| Diary feed | caption field + **Сохранить в дневник** → list with thumbnail, caption, `43.2389° N, 76.8897° E`, time; swipe to delete with undo. Saved offline as JSON in SharedPreferences ([`diary_storage.dart`](lib/lw13/services/diary_storage.dart)) |
+| No crashes | every hardware call returns a sealed result (`LocationFix / LocationServicesDisabled / LocationPermissionDenied / LocationPermissionDeniedForever / LocationFailure`, `MediaPicked / MediaCancelled / MediaPermissionDenied / MediaFailure`) and the screen `switch`es over it |
+| Tests | JSON round trip, corrupted data, formatting, camera → auto GPS spinner → save → disk, gallery via the bottom sheet, cancel, GPS off dialog, denied / denied forever, camera denied, swipe + undo, both themes on 3 sizes, entry from Профиль ([`test/lw13_test.dart`](test/lw13_test.dart)); camera and GPS are fakes behind interfaces |
+
+**Defense notes.**
+- *Why `NSCameraUsageDescription` is mandatory on iOS.* iOS shows this text in the system permission prompt. If an app touches the camera without the key, iOS terminates it immediately (privacy crash), and App Store review rejects builds that use the camera without a clear reason.
+- *"Don't ask again" on Android.* The system stops showing the dialog: `requestPermission()` returns at once with `deniedForever` / `permanentlyDenied` and no UI. The app can only explain why it needs the permission and send the user to the app settings (`openAppSettings()`), which is what the dialogs here do.
+
 ## Project structure
 
 ```
@@ -153,6 +177,11 @@ lib/
 │   ├── models/product.dart       # Equatable product
 │   ├── screens/                  # Login (BlocConsumer), catalog, cart
 │   └── widgets/cart_badge_action.dart # BlocBuilder badge
+├── lw13/                         # LW13 geotagged photo diary
+│   ├── models/diary_entry.dart   # Photo path, caption, time, coordinates
+│   ├── services/                 # Camera/gallery, GPS, diary JSON storage
+│   ├── screens/photo_diary_screen.dart
+│   └── widgets/diary_photo.dart  # Image.file with a fallback
 ├── data/
 │   └── mock_data.dart            # Mock expenses and budget (API in later milestones)
 ├── models/

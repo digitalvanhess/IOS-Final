@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stipa/lw13/services/diary_storage.dart';
 import 'package:stipa/main.dart';
 import 'package:stipa/models/note_item.dart';
 import 'package:stipa/providers/settings_provider.dart';
@@ -33,6 +34,7 @@ Future<SharedPreferences> _launch(
     StipaApp(
       settings: SettingsProvider.fromPrefs(prefs),
       notesStorage: NotesStorage(prefs),
+      diaryStorage: DiaryStorage(prefs),
     ),
   );
   await tester.pumpAndSettle();

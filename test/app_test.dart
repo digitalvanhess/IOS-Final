@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stipa/lw13/services/diary_storage.dart';
 import 'package:stipa/main.dart';
 import 'package:stipa/providers/settings_provider.dart';
 import 'package:stipa/screens/cart_screen.dart';
@@ -29,6 +30,7 @@ Future<void> _pumpApp(WidgetTester tester, Size size) async {
     StipaApp(
       settings: SettingsProvider.fromPrefs(prefs),
       notesStorage: NotesStorage(prefs),
+      diaryStorage: DiaryStorage(prefs),
     ),
   );
   await tester.pumpAndSettle();

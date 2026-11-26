@@ -1,6 +1,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- LW10: REST API (release builds need it, debug adds it automatically) -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- LW13: photo diary. Camera for new photos, fine + coarse for the
+         GPS fix (coarse alone gives only ~1-3 km), media images for the
+         gallery on Android 13+; READ_EXTERNAL_STORAGE covers Android 12
+         and older. -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <!-- The camera is optional: the app still installs on devices without
+         one and falls back to the gallery. -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
     <application
         android:label="Stipa"
         android:name="${applicationName}"

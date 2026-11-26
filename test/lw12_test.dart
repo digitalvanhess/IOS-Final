@@ -7,6 +7,7 @@ import 'package:stipa/lw12/data/shop_catalog.dart';
 import 'package:stipa/lw12/screens/login_screen.dart';
 import 'package:stipa/lw12/screens/shop_cart_screen.dart';
 import 'package:stipa/lw12/screens/shop_catalog_screen.dart';
+import 'package:stipa/lw13/services/diary_storage.dart';
 import 'package:stipa/main.dart';
 import 'package:stipa/providers/settings_provider.dart';
 import 'package:stipa/screens/profile_screen.dart';
@@ -39,6 +40,7 @@ Future<void> _launch(
     StipaApp(
       settings: SettingsProvider.fromPrefs(prefs),
       notesStorage: NotesStorage(prefs),
+      diaryStorage: DiaryStorage(prefs),
       authDelay: _delay,
     ),
   );

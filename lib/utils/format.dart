@@ -79,6 +79,21 @@ class Format {
       '${date.hour.toString().padLeft(2, '0')}:'
       '${date.minute.toString().padLeft(2, '0')}';
 
+  /// "2026-11-24 14:30:15" (photo diary timestamp, LW13)
+  static String stamp(DateTime d) {
+    String two(int n) => n.toString().padLeft(2, '0');
+    return '${d.year}-${two(d.month)}-${two(d.day)} '
+        '${two(d.hour)}:${two(d.minute)}:${two(d.second)}';
+  }
+
+  /// 43.238949, 76.889709 -> "43.2389° N, 76.8897° E"
+  static String coordinates(double lat, double lng) {
+    final ns = lat >= 0 ? 'N' : 'S';
+    final ew = lng >= 0 ? 'E' : 'W';
+    return '${lat.abs().toStringAsFixed(4)}° $ns, '
+        '${lng.abs().toStringAsFixed(4)}° $ew';
+  }
+
   /// 25 -> "дней", 1 -> "день", 3 -> "дня"
   static String daysWord(int n) {
     final mod10 = n % 10;

@@ -24,6 +24,12 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Stipa uses the camera to take photos for your photo diary.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Stipa opens your photo library so you can add existing pictures to your photo diary.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Stipa saves where each diary photo was taken (latitude, longitude and accuracy).</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>
