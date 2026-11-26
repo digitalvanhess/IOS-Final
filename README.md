@@ -123,11 +123,36 @@ Screen **«Заметки»** ([`vault_screen.dart`](lib/screens/vault_screen.da
 | Cold restart | add 2 notes, switch dark mode, save a name, swipe the app away, reopen → Профиль shows the name, «Заметки» opens dark with both notes and their checkboxes |
 | Tests | JSON round trip and fallbacks, corrupted JSON, both themes on 3 sizes, simulated force-quit + relaunch, dark on the very first frame, delete + undo on disk, empty name → Guest User ([`test/vault_test.dart`](test/vault_test.dart)) |
 
+### Lab #12: Advanced State Management with BLoC & Cubit
+
+Screens **«Вход»** ([`login_screen.dart`](lib/lw12/screens/login_screen.dart)), **«Магазин»** ([`shop_catalog_screen.dart`](lib/lw12/screens/shop_catalog_screen.dart)) and **«Корзина»** ([`shop_cart_screen.dart`](lib/lw12/screens/shop_cart_screen.dart)), opened from **Профиль → Магазин с входом**. Everything lives in [`lib/lw12/`](lib/lw12), separate from the LW9 `CartProvider`, which keeps working as before.
+
+| Requirement | Where |
+|---|---|
+| `flutter_bloc: ^8.1.3`, `equatable: ^2.0.5` | `pubspec.yaml` |
+| `AuthCubit` with `AuthInitial`, `AuthLoading`, `AuthSuccess(username, email)`, `AuthError(message)` | [`auth_cubit.dart`](lib/lw12/bloc/auth/auth_cubit.dart), [`auth_state.dart`](lib/lw12/bloc/auth/auth_state.dart): `sealed class AuthState extends Equatable`, `props` overrides, `const` constructors |
+| `login(email, password)` | `emit(AuthLoading())` → `Future.delayed(2 s)` → `AuthSuccess` for `student@narxoz.kz / 123456`, otherwise `AuthError` (empty fields, bad email, short password, wrong credentials); double taps during loading are ignored, `isClosed` check after the delay |
+| `BlocConsumer<AuthCubit, AuthState>` | **listener** (with `listenWhen`): red floating `SnackBar` on `AuthError`, `pushReplacement` to the catalog on `AuthSuccess`. **builder**: fields disabled and the button replaced by `CircularProgressIndicator` during `AuthLoading` |
+| `CartBloc` with `AddProductEvent(Product)`, `RemoveProductEvent(productId)`, `ClearCartEvent()` | [`cart_bloc.dart`](lib/lw12/bloc/cart/cart_bloc.dart), [`cart_event.dart`](lib/lw12/bloc/cart/cart_event.dart): one `on<Event>` handler per event, each emits a new state |
+| `CartState(items, totalPrice, count)` | [`cart_state.dart`](lib/lw12/bloc/cart/cart_state.dart): `CartState.fromItems` derives total and count, `List.unmodifiable`, `CartItem(product, quantity)` |
+| Catalog with «Добавить» | 6 offline student products in ₸ ([`shop_catalog.dart`](lib/lw12/data/shop_catalog.dart)); «в корзине: N» under each button via `BlocSelector` |
+| Live AppBar badge | [`CartBadgeAction`](lib/lw12/widgets/cart_badge_action.dart): `BlocBuilder<CartBloc, CartState>` with `buildWhen: count changed` + Material `Badge`, on both the catalog and the cart route |
+| Cart screen | lines with quantity and line total, 🗑 → `RemoveProductEvent`, «Итого», «Очистить всё» → `ClearCartEvent`, empty state |
+| Providers | `MultiBlocProvider` above `MaterialApp` in [`main.dart`](lib/main.dart), so the three routes share one `AuthCubit` and one `CartBloc` |
+| Tests | Cubit transitions for valid and every invalid input, Equatable equality, ignored double tap, every `CartBloc` event, immutability, SnackBar color/behavior + spinner, full login → catalog → cart flow with badge sync on 3 sizes, back navigation and logout ([`test/lw12_test.dart`](test/lw12_test.dart)) |
+
 ## Project structure
 
 ```
 lib/
 ├── main.dart                     # App entry, MaterialApp + theme
+├── lw12/                         # LW12 BLoC shop (self-contained)
+│   ├── bloc/auth/                # AuthCubit + Equatable states
+│   ├── bloc/cart/                # CartBloc, events, CartState
+│   ├── data/shop_catalog.dart    # Offline products in ₸
+│   ├── models/product.dart       # Equatable product
+│   ├── screens/                  # Login (BlocConsumer), catalog, cart
+│   └── widgets/cart_badge_action.dart # BlocBuilder badge
 ├── data/
 │   └── mock_data.dart            # Mock expenses and budget (API in later milestones)
 ├── models/
@@ -206,7 +231,7 @@ flutter test
 | ✅ 1. MVP UI | Screens, navigation, local state |
 | 2. REST API | Load and save expenses through an API, currency rates |
 | 3. Database | Local storage so expenses survive restarts |
-| 4. BLoC | Move state out of `RootScreen` into BLoC |
+| 4. BLoC | ✅ LW12 login + cart on BLoC; next: move `RootScreen` state into BLoC |
 | Final | Polish, animations, defense on Week 15 |
 
 ## Design
