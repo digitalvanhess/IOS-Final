@@ -24,10 +24,10 @@ class CategoryChip extends StatelessWidget {
         duration: const Duration(milliseconds: 180),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
         decoration: BoxDecoration(
-          color: selected ? AppColors.accentSoft : context.palette.card,
+          color: selected ? context.palette.accentSoft : context.palette.card,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: selected ? AppColors.accent : context.palette.border,
+            color: selected ? context.palette.accent : context.palette.border,
           ),
         ),
         child: Row(

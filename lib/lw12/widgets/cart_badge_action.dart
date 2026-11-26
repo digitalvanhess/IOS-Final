@@ -26,7 +26,7 @@ class CartBadgeAction extends StatelessWidget {
           icon: Badge(
             key: const ValueKey('cart_badge'),
             isLabelVisible: state.count > 0,
-            backgroundColor: AppColors.accent,
+            backgroundColor: context.palette.accent,
             textColor: Colors.black,
             label: Text('${state.count}'),
             child: const Icon(Icons.shopping_cart_outlined),

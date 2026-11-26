@@ -273,7 +273,7 @@ class _Info extends StatelessWidget {
                   value: share.clamp(0.0, 1.0),
                   minHeight: 10,
                   backgroundColor: context.palette.cardLight,
-                  color: share > 1 ? AppColors.danger : AppColors.accent,
+                  color: share > 1 ? AppColors.danger : context.palette.accent,
                 ),
               ),
               const SizedBox(height: 8),
@@ -310,7 +310,7 @@ class _Info extends StatelessWidget {
                 label: const Text('К тратам'),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: context.palette.accentText,
-                  side: const BorderSide(color: AppColors.accent),
+                  side: BorderSide(color: context.palette.accent),
                   minimumSize: const Size.fromHeight(52),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),

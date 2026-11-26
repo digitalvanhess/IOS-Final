@@ -184,9 +184,9 @@ class _LoginScreenState extends State<LoginScreen> {
         borderRadius: radius,
         borderSide: BorderSide.none,
       ),
-      focusedBorder: const OutlineInputBorder(
+      focusedBorder: OutlineInputBorder(
         borderRadius: radius,
-        borderSide: BorderSide(color: AppColors.accent),
+        borderSide: BorderSide(color: context.palette.accent),
       ),
     );
   }
@@ -201,7 +201,7 @@ class _Header extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 36,
-          backgroundColor: AppColors.accentSoft,
+          backgroundColor: context.palette.accentSoft,
           child: Icon(
             Icons.storefront,
             size: 34,

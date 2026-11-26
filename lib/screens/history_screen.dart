@@ -65,7 +65,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           behavior: SnackBarBehavior.floating,
           action: SnackBarAction(
             label: 'ОТМЕНИТЬ',
-            textColor: AppColors.accent,
+            textColor: context.palette.accent,
             onPressed: () => _restore(index, removed),
           ),
         ),
@@ -134,7 +134,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       ),
       body: RefreshIndicator(
         onRefresh: _refresh,
-        color: AppColors.accent,
+        color: context.palette.accent,
         backgroundColor: context.palette.card,
         child: _items.isEmpty
             ? _EmptyCatalog(onReset: _resetCatalog)

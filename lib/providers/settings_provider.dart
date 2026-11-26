@@ -8,17 +8,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SettingsProvider extends ChangeNotifier {
   static const darkModeKey = 'app_theme_dark_mode';
   static const displayNameKey = 'user_display_name';
+
+  /// Vice Night neon skin on top of dark mode (just for fun).
+  static const viceKey = 'app_theme_vice';
   static const defaultName = 'Guest User';
 
   final SharedPreferences _prefs;
   bool _isDarkMode;
+  bool _isVice;
   String _displayName;
 
   SettingsProvider(
     this._prefs, {
     required bool isDarkMode,
     required String displayName,
+    bool isVice = false,
   }) : _isDarkMode = isDarkMode,
+       _isVice = isVice,
        _displayName = displayName;
 
   /// Reads both values from an already loaded prefs instance, with the
@@ -28,10 +34,16 @@ class SettingsProvider extends ChangeNotifier {
       prefs,
       isDarkMode: prefs.getBool(darkModeKey) ?? false,
       displayName: prefs.getString(displayNameKey) ?? defaultName,
+      isVice: prefs.getBool(viceKey) ?? false,
     );
   }
 
   bool get isDarkMode => _isDarkMode;
+
+  /// The skin is a dark theme, so it only shows while dark mode is on. The
+  /// choice is kept when dark mode goes off and comes back with it.
+  bool get isVice => _isVice;
+  bool get showsVice => _isDarkMode && _isVice;
   String get displayName => _displayName;
 
   /// True when the user has saved a name (not the 'Guest User' fallback).
@@ -43,6 +55,13 @@ class SettingsProvider extends ChangeNotifier {
     _isDarkMode = value;
     notifyListeners();
     await _prefs.setBool(darkModeKey, value);
+  }
+
+  Future<void> setVice(bool value) async {
+    if (value == _isVice) return;
+    _isVice = value;
+    notifyListeners();
+    await _prefs.setBool(viceKey, value);
   }
 
   /// Saves the trimmed name. An empty name removes the key, so the header

@@ -99,8 +99,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
         ],
       ),
       body: switch (_state) {
-        LoadState.loading => const Center(
-          child: CircularProgressIndicator(color: AppColors.accent),
+        LoadState.loading => Center(
+          child: CircularProgressIndicator(color: context.palette.accent),
         ),
         LoadState.error => _ErrorState(message: _error, onRetry: _load),
         LoadState.success => _buildFeed(),
@@ -112,7 +112,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     return RefreshIndicator(
       onRefresh: _refresh,
       color: Colors.black,
-      backgroundColor: AppColors.accent,
+      backgroundColor: context.palette.accent,
       child: ListView.separated(
         // Pull-to-refresh works even when the list is short.
         physics: const AlwaysScrollableScrollPhysics(),

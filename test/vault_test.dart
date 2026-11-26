@@ -10,6 +10,7 @@ import 'package:stipa/providers/settings_provider.dart';
 import 'package:stipa/screens/profile_screen.dart';
 import 'package:stipa/screens/vault_screen.dart';
 import 'package:stipa/services/notes_storage.dart';
+import 'package:stipa/theme/app_theme.dart';
 
 const _sizes = {
   'iPhone SE': Size(320, 568),
@@ -130,10 +131,23 @@ void main() {
       await _launch(tester, size: entry.value);
       await _openVault(tester);
       expect(find.text('Привет, Guest User'), findsOneWidget);
+      // The Vice card pushes the empty state below the fold on small phones.
+      await tester.scrollUntilVisible(
+        find.text('Заметок пока нет'),
+        200,
+        scrollable: find
+            .descendant(
+              of: find.byType(VaultScreen),
+              matching: find.byType(Scrollable),
+            )
+            .first,
+      );
       expect(find.text('Заметок пока нет'), findsOneWidget);
       expect(_vaultBrightness(tester), Brightness.light);
 
       await _addNote(tester, 'Очень длинная заметка про стипендию и проездной');
+      await tester.drag(find.byType(Scrollable).first, const Offset(0, 2000));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('dark_mode_switch')));
       await tester.pumpAndSettle();
       expect(_vaultBrightness(tester), Brightness.dark);
@@ -228,6 +242,68 @@ void main() {
     expect(tabBrightness(), Brightness.light);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('Vice Night needs dark mode, repaints the app and persists', (
+    tester,
+  ) async {
+    Color background() =>
+        tester.widget<Scaffold>(find.byType(Scaffold).last).backgroundColor ??
+        Theme.of(
+          tester.element(find.byType(Scaffold).last),
+        ).scaffoldBackgroundColor;
+
+    final prefs = await _launch(tester);
+    await _openVault(tester);
+
+    // Light theme: the Vice switch is disabled.
+    final vice = find.byKey(const ValueKey('vice_switch'));
+    expect(tester.widget<SwitchListTile>(vice).onChanged, isNull);
+    expect(find.text('Сначала включите тёмную тему'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('dark_mode_switch')));
+    await tester.pumpAndSettle();
+    expect(background(), AppPalette.dark.background);
+
+    await tester.tap(vice);
+    await tester.pumpAndSettle();
+    expect(background(), AppPalette.vice.background);
+    expect(prefs.getBool(SettingsProvider.viceKey), isTrue);
+    expect(find.text('Неоновый закат в стиле GTA VI'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+
+    // Dark mode off -> light; back on -> Vice comes back with it.
+    await tester.tap(find.byKey(const ValueKey('dark_mode_switch')));
+    await tester.pumpAndSettle();
+    expect(background(), AppPalette.light.background);
+    await tester.tap(find.byKey(const ValueKey('dark_mode_switch')));
+    await tester.pumpAndSettle();
+    expect(background(), AppPalette.vice.background);
+
+    // Cold restart: still Vice on the first frame.
+    final disk = await _kill(tester, prefs);
+    await _launch(tester, disk: disk);
+    expect(
+      Theme.of(
+        tester.element(find.byType(Scaffold).first),
+      ).scaffoldBackgroundColor,
+      AppPalette.vice.background,
+    );
+  });
+
+  for (final entry in _sizes.entries) {
+    testWidgets('Vice Night: no overflow on ${entry.key}', (tester) async {
+      await _launch(
+        tester,
+        size: entry.value,
+        disk: {
+          SettingsProvider.darkModeKey: true,
+          SettingsProvider.viceKey: true,
+        },
+      );
+      await _openVault(tester);
+      expect(tester.takeException(), isNull);
+    });
+  }
 
   testWidgets('delete syncs disk, undo restores it', (tester) async {
     final prefs = await _launch(

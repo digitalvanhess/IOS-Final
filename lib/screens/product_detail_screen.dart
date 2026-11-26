@@ -53,7 +53,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           content: const Text('Добавлено в корзину'),
           action: SnackBarAction(
             label: 'Открыть',
-            textColor: AppColors.accent,
+            textColor: context.palette.accent,
             onPressed: _openCart,
           ),
         ),
@@ -294,7 +294,9 @@ class _Dots extends StatelessWidget {
             width: i == active ? 22 : 8,
             height: 8,
             decoration: BoxDecoration(
-              color: i == active ? AppColors.accent : context.palette.cardLight,
+              color: i == active
+                  ? context.palette.accent
+                  : context.palette.cardLight,
               borderRadius: BorderRadius.circular(4),
             ),
           ),
@@ -313,7 +315,7 @@ class _CategoryBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: AppColors.accentSoft,
+        color: context.palette.accentSoft,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -373,7 +375,7 @@ class _BottomBar extends StatelessWidget {
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size.fromHeight(56),
                     foregroundColor: context.palette.accentText,
-                    side: const BorderSide(color: AppColors.accent),
+                    side: BorderSide(color: context.palette.accent),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18),
                     ),

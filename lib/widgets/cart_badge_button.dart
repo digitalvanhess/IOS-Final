@@ -75,7 +75,7 @@ class _CountBadgeState extends State<_CountBadge>
         padding: const EdgeInsets.symmetric(horizontal: 5),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: AppColors.accent,
+          color: context.palette.accent,
           borderRadius: BorderRadius.circular(9),
           border: Border.all(color: context.palette.background, width: 1.5),
         ),

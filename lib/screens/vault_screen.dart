@@ -100,7 +100,7 @@ class _VaultViewState extends State<_VaultView> {
           content: Text('Заметка «${note.title}» удалена'),
           action: SnackBarAction(
             label: 'Отменить',
-            textColor: AppColors.accent,
+            textColor: context.palette.accent,
             onPressed: () {
               if (!mounted) return;
               setState(
@@ -137,7 +137,15 @@ class _VaultViewState extends State<_VaultView> {
     final done = _notes.where((n) => n.isCompleted).length;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Заметки')),
+      appBar: AppBar(
+        title: const Text('Заметки'),
+        bottom: context.palette.sunset == null
+            ? null
+            : const PreferredSize(
+                preferredSize: Size.fromHeight(3),
+                child: _SunsetStrip(),
+              ),
+      ),
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Center(
@@ -164,6 +172,28 @@ class _VaultViewState extends State<_VaultView> {
                     ),
                     title: const Text('Тёмная тема'),
                     subtitle: const Text('Сохраняется на устройстве'),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: SwitchListTile(
+                    key: const ValueKey('vice_switch'),
+                    value: settings.showsVice,
+                    // A dark skin: only available while dark mode is on.
+                    onChanged: settings.isDarkMode ? settings.setVice : null,
+                    secondary: Icon(
+                      Icons.nightlife_rounded,
+                      color: settings.showsVice
+                          ? context.palette.accentText
+                          : scheme.onSurfaceVariant,
+                    ),
+                    title: const Text('Vice Night 🌴'),
+                    subtitle: Text(
+                      settings.isDarkMode
+                          ? 'Неоновый закат в стиле GTA VI'
+                          : 'Сначала включите тёмную тему',
+                    ),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -241,7 +271,7 @@ class _Header extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 28,
-          backgroundColor: AppColors.accentSoft,
+          backgroundColor: context.palette.accentSoft,
           child: Text(
             name.characters.first.toUpperCase(),
             style: TextStyle(
@@ -256,15 +286,17 @@ class _Header extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Привет, $name',
-                key: const ValueKey('vault_header_name'),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: scheme.onSurface,
+              _SunsetText(
+                child: Text(
+                  'Привет, $name',
+                  key: const ValueKey('vault_header_name'),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                    color: scheme.onSurface,
+                  ),
                 ),
               ),
               const SizedBox(height: 2),
@@ -372,7 +404,7 @@ class _NoteInput extends StatelessWidget {
           onPressed: onAdd,
           tooltip: 'Добавить заметку',
           style: IconButton.styleFrom(
-            backgroundColor: AppColors.accent,
+            backgroundColor: context.palette.accent,
             foregroundColor: Colors.black,
             fixedSize: const Size(48, 48),
           ),
@@ -450,6 +482,40 @@ class _EmptyNotes extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Vice Night: thin orange → pink → violet → teal line under the AppBar.
+class _SunsetStrip extends StatelessWidget {
+  const _SunsetStrip();
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: context.palette.sunset!),
+      ),
+      child: const SizedBox(height: 3, width: double.infinity),
+    );
+  }
+}
+
+/// Paints [child] with the sunset gradient in Vice Night, as is otherwise.
+class _SunsetText extends StatelessWidget {
+  final Widget child;
+
+  const _SunsetText({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    final sunset = context.palette.sunset;
+    if (sunset == null) return child;
+    return ShaderMask(
+      blendMode: BlendMode.srcIn,
+      shaderCallback: (bounds) =>
+          LinearGradient(colors: sunset.take(3).toList()).createShader(bounds),
+      child: child,
     );
   }
 }

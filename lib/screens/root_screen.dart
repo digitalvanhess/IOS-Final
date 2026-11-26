@@ -144,7 +144,7 @@ class _RootScreenState extends State<RootScreen> {
           content: Text(text),
           action: SnackBarAction(
             label: 'Отменить',
-            textColor: AppColors.accent,
+            textColor: context.palette.accent,
             onPressed: onUndo,
           ),
         ),
@@ -237,8 +237,8 @@ class _AddButton extends StatelessWidget {
     return Container(
       width: 48,
       height: 48,
-      decoration: const BoxDecoration(
-        color: AppColors.accent,
+      decoration: BoxDecoration(
+        color: context.palette.accent,
         shape: BoxShape.circle,
       ),
       child: const Icon(Icons.add, color: Colors.black, size: 28),

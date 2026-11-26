@@ -23,7 +23,7 @@ class CartScreen extends StatelessWidget {
           content: Text('«${item.title}» убран из корзины'),
           action: SnackBarAction(
             label: 'Отменить',
-            textColor: AppColors.accent,
+            textColor: context.palette.accent,
             onPressed: () => cart.add(item, index: index),
           ),
         ),

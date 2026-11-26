@@ -25,7 +25,7 @@ class BudgetRing extends StatelessWidget {
     final progress = dailyLimit <= 0
         ? 0.0
         : (leftToday / dailyLimit).clamp(0.0, 1.0);
-    final color = overspent ? AppColors.danger : AppColors.accent;
+    final color = overspent ? AppColors.danger : context.palette.accent;
 
     return SizedBox.square(
       dimension: size,

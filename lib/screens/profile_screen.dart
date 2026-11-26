@@ -76,7 +76,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Center(
             child: CircleAvatar(
               radius: 42,
-              backgroundColor: AppColors.accentSoft,
+              backgroundColor: context.palette.accentSoft,
               child: Text(
                 name.characters.first.toUpperCase(),
                 style: TextStyle(

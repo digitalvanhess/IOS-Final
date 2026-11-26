@@ -25,9 +25,18 @@ class AppPalette extends ThemeExtension<AppPalette> {
   final Color textSecondary;
   final Color textMuted;
 
+  /// Brand accent for fills: lime in Stipa, hot pink in Vice Night.
+  final Color accent;
+
+  /// [accent] at ~15% for chips and avatar backgrounds.
+  final Color accentSoft;
+
   /// Lime for text and icons. On a light background the bright lime is
   /// unreadable, so the light palette uses a darker shade.
   final Color accentText;
+
+  /// Vice Night only: the sunset gradient strip under the AppBar.
+  final List<Color>? sunset;
 
   const AppPalette({
     required this.background,
@@ -39,6 +48,9 @@ class AppPalette extends ThemeExtension<AppPalette> {
     required this.textSecondary,
     required this.textMuted,
     required this.accentText,
+    this.accent = AppColors.accent,
+    this.accentSoft = AppColors.accentSoft,
+    this.sunset,
   });
 
   /// The Figma mockup.
@@ -52,6 +64,29 @@ class AppPalette extends ThemeExtension<AppPalette> {
     textSecondary: Color(0xFF9A9A9A),
     textMuted: Color(0xFF5E5E5E),
     accentText: AppColors.accent,
+  );
+
+  /// Vice Night (LW11 just for fun): neon Miami night in the spirit of the
+  /// GTA VI trailers. Deep violet sky, hot pink neon, sunset orange and
+  /// ocean teal. Only colors, no logos or fonts from the game.
+  static const vice = AppPalette(
+    background: Color(0xFF12091F),
+    surface: Color(0xFF1A0E2D),
+    card: Color(0xFF241339),
+    cardLight: Color(0xFF301A4C),
+    border: Color(0xFF3E2361),
+    textPrimary: Color(0xFFFFF0F6),
+    textSecondary: Color(0xFFC6A6D8),
+    textMuted: Color(0xFF80649A),
+    accent: Color(0xFFFF3D8B),
+    accentSoft: Color(0x33FF3D8B),
+    accentText: Color(0xFFFF6FA8),
+    sunset: [
+      Color(0xFFFF9A3C),
+      Color(0xFFFF3D8B),
+      Color(0xFFB03CFF),
+      Color(0xFF2DE2E6),
+    ],
   );
 
   static const light = AppPalette(
@@ -77,6 +112,9 @@ class AppPalette extends ThemeExtension<AppPalette> {
     Color? textSecondary,
     Color? textMuted,
     Color? accentText,
+    Color? accent,
+    Color? accentSoft,
+    List<Color>? sunset,
   }) {
     return AppPalette(
       background: background ?? this.background,
@@ -88,6 +126,9 @@ class AppPalette extends ThemeExtension<AppPalette> {
       textSecondary: textSecondary ?? this.textSecondary,
       textMuted: textMuted ?? this.textMuted,
       accentText: accentText ?? this.accentText,
+      accent: accent ?? this.accent,
+      accentSoft: accentSoft ?? this.accentSoft,
+      sunset: sunset ?? this.sunset,
     );
   }
 
@@ -105,6 +146,9 @@ class AppPalette extends ThemeExtension<AppPalette> {
       textSecondary: Color.lerp(textSecondary, other.textSecondary, t)!,
       textMuted: Color.lerp(textMuted, other.textMuted, t)!,
       accentText: Color.lerp(accentText, other.accentText, t)!,
+      accent: Color.lerp(accent, other.accent, t)!,
+      accentSoft: Color.lerp(accentSoft, other.accentSoft, t)!,
+      sunset: t < 0.5 ? sunset : other.sunset,
     );
   }
 }
@@ -116,6 +160,7 @@ extension AppPaletteContext on BuildContext {
 class AppTheme {
   static ThemeData get dark => _build(AppPalette.dark, Brightness.dark);
   static ThemeData get light => _build(AppPalette.light, Brightness.light);
+  static ThemeData get vice => _build(AppPalette.vice, Brightness.dark);
 
   /// One builder for both themes, so they only differ in the palette.
   static ThemeData _build(AppPalette p, Brightness brightness) {
@@ -128,9 +173,9 @@ class AppTheme {
       useMaterial3: true,
       brightness: brightness,
       colorScheme: scheme.copyWith(
-        primary: isDark ? AppColors.accent : AppColors.accentDark,
+        primary: isDark ? p.accent : AppColors.accentDark,
         onPrimary: Colors.black,
-        secondary: AppColors.accent,
+        secondary: p.accent,
         surface: p.background,
         onSurface: p.textPrimary,
         onSurfaceVariant: p.textSecondary,
@@ -150,11 +195,21 @@ class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
-        titleTextStyle: TextStyle(
-          color: p.textPrimary,
-          fontSize: 17,
-          fontWeight: FontWeight.w600,
-        ),
+        // Vice Night: bold italic caps, like a neon sign.
+        titleTextStyle: p.sunset == null
+            ? TextStyle(
+                color: p.textPrimary,
+                fontSize: 17,
+                fontWeight: FontWeight.w600,
+              )
+            : TextStyle(
+                color: p.textPrimary,
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                fontStyle: FontStyle.italic,
+                letterSpacing: 0.6,
+                shadows: [Shadow(color: p.accent, blurRadius: 12)],
+              ),
       ),
       cardTheme: CardThemeData(
         color: p.card,
@@ -174,14 +229,14 @@ class AppTheme {
         selectedLabelStyle: const TextStyle(fontSize: 11),
         unselectedLabelStyle: const TextStyle(fontSize: 11),
       ),
-      floatingActionButtonTheme: const FloatingActionButtonThemeData(
-        backgroundColor: AppColors.accent,
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: p.accent,
         foregroundColor: Colors.black,
         shape: CircleBorder(),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.accent,
+          backgroundColor: p.accent,
           foregroundColor: Colors.black,
           disabledBackgroundColor: p.cardLight,
           disabledForegroundColor: p.textMuted,
@@ -211,12 +266,12 @@ class AppTheme {
           (s) => s.contains(WidgetState.selected) ? Colors.black : null,
         ),
         trackColor: WidgetStateProperty.resolveWith(
-          (s) => s.contains(WidgetState.selected) ? AppColors.accent : null,
+          (s) => s.contains(WidgetState.selected) ? p.accent : null,
         ),
       ),
       checkboxTheme: CheckboxThemeData(
         fillColor: WidgetStateProperty.resolveWith(
-          (s) => s.contains(WidgetState.selected) ? AppColors.accent : null,
+          (s) => s.contains(WidgetState.selected) ? p.accent : null,
         ),
         checkColor: const WidgetStatePropertyAll(Colors.black),
       ),

@@ -52,7 +52,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
             onSelectionChanged: (s) => setState(() => _period = s.first),
             style: SegmentedButton.styleFrom(
               backgroundColor: context.palette.card,
-              selectedBackgroundColor: AppColors.accent,
+              selectedBackgroundColor: context.palette.accent,
               selectedForegroundColor: Colors.black,
               foregroundColor: context.palette.textSecondary,
               side: BorderSide(color: context.palette.border),

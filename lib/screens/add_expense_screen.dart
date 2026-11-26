@@ -198,7 +198,7 @@ class _Hint extends StatelessWidget {
     } else if (leftAfter >= 0) {
       text = 'После этой траты на сегодня останется ${Format.money(leftAfter)}';
       color = context.palette.accentText;
-      background = AppColors.accentSoft;
+      background = context.palette.accentSoft;
     } else {
       text =
           'Это больше дневного лимита на ${Format.money(-leftAfter)}. '

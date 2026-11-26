@@ -193,7 +193,7 @@ class _PhotoDiaryScreenState extends State<PhotoDiaryScreen> {
           content: const Text('Запись удалена'),
           action: SnackBarAction(
             label: 'Отменить',
-            textColor: AppColors.accent,
+            textColor: context.palette.accent,
             onPressed: () {
               setState(
                 () => _entries.insert(index.clamp(0, _entries.length), entry),

@@ -87,7 +87,7 @@ class _ProductCard extends StatelessWidget {
               width: 52,
               height: 52,
               decoration: BoxDecoration(
-                color: AppColors.accentSoft,
+                color: context.palette.accentSoft,
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Icon(
@@ -157,7 +157,7 @@ class _AddButton extends StatelessWidget {
               onPressed: () =>
                   context.read<CartBloc>().add(AddProductEvent(product)),
               style: FilledButton.styleFrom(
-                backgroundColor: AppColors.accent,
+                backgroundColor: context.palette.accent,
                 foregroundColor: Colors.black,
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 visualDensity: VisualDensity.compact,
